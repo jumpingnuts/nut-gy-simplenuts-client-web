@@ -1,0 +1,21 @@
+<div class="row" ng-scrolled="listLoad()">
+  <div class="col-lg-12">
+    <h3>{{nav.items[nav.active].name}}</h3>
+    <hr />
+  </div>
+  <div ng-repeat="simnut in simnuts" class="col-lg-4" ng-click="move('/#/app/'+simnut.id);">
+    <h4>
+      <a ng-href="/#/simnut/{{simnut.id}}">
+        {{simnut.title}}
+      </a>
+      <small class="text-success">
+        <i class="fa fa-thumbs-o-up"></i>
+        {{simnut.count_likes?simnut.count_likes:0}}
+        <small><p>{{simnut.created}}</p></small>
+      </small>
+    </h4>
+    <p>{{simnut.description}}...</p>
+    <hr />
+    <!--<p><a class="btn btn-default" href="/kakaoapp/#!/app/{app.id}">더 읽기 &raquo;</a></p> -->
+  </div>
+</div>
