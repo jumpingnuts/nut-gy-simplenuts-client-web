@@ -29,7 +29,26 @@ define(['angular'], function (angular) {
         Comment.query(param, function(simnuts) {
             delay.resolve(simnuts);
         }, function() {
-            delay.reject('댓글을 가져올 수 없습니다');
+            delay.reject('api fail');
+        });
+        return delay.promise;
+      };
+    }])
+    .factory('CommentWrite', [ 'Comment', '$q', function(Comment, $q) {
+      return function(key, content, userId) {
+        if(!key) { return false; }
+        
+        var param = {
+          'key': key,
+          'content': content,
+          'user_id': userId
+        };
+        
+        var delay = $q.defer();
+        Comment.save(param, function(simnuts) {
+            delay.resolve(simnuts);
+        }, function() {
+            delay.reject('api fail');
         });
         return delay.promise;
       };

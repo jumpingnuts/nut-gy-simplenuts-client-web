@@ -2,7 +2,8 @@ define(['angular', 'services/comment'], function (angular) {
   'use strict';
 
   angular.module('commentCtrls', ['commentServices'])
-    .controller('CommentCtrl', [ '$scope', 'CommentLoader', function($scope, CommentLoader){
+    .controller('CommentCtrl', [ '$scope', 'CommentLoader', 'CommentWrite', function($scope, CommentLoader, CommentWrite){
+      $scope.content = '';
       $scope.comment = {
         page: 1,
         type: 'new',
@@ -14,5 +15,12 @@ define(['angular', 'services/comment'], function (angular) {
         });
       }
       $scope.commentLoad();
+      
+      $scope.commentWrite = function(){
+        CommentWrite($scope.webInfo.currentUrl, $scope.content, $scope.userInfo.id).then(function(res){
+          $scope.comment.push($scope.content);
+          $scope.content = '';
+        });
+      };
     }])
 });
