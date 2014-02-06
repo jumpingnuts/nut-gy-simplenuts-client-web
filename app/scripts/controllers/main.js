@@ -1,4 +1,4 @@
-define(['angular', 'services/main', '/scripts/lib/kakao.link.min.js'], function (angular) {
+define(['angular', 'services/main', 'kakao'], function (angular) {
   'use strict';
 
   angular.module('mainCtrls', ['ngSanitize', 'ngMd5', 'mainServices'])
@@ -41,11 +41,18 @@ define(['angular', 'services/main', '/scripts/lib/kakao.link.min.js'], function 
       'md5',
       'simnut',
       'LikeView',
-      function($scope, $route, $routeParams, md5, simnut, LikeView){
+      'LikeOn',
+      'LikeOff',
+      function($scope, $route, $routeParams, md5, simnut, LikeView, LikeOn, LikeOff){
       
       $scope.inputName = '';
       $scope.result = '';
       $scope.simnut = simnut;
+      $scope.like = {
+        'light' : false,
+        'text' : {false: '꺼짐', true: '켜짐'},
+        'id' : null
+      }
       
       var variables = angular.fromJson($scope.simnut.variables);
       for(var i in variables) {
@@ -65,14 +72,65 @@ define(['angular', 'services/main', '/scripts/lib/kakao.link.min.js'], function 
       }
 
       if($scope.isLogin()) {
-        LikeView($scope.userInfo.id, $scope.simnut.id).then(function(res){
+        LikeView($scope.simnut.id, $scope.userInfo.id).then(function(res){
           if(res) {
-              $scope.likeView = {'TF':true, 'text':'켜짐'};
+            $scope.like.light = true;
+            $scope.like.id = res.id;
           }
         });
       } else {
-        $scope.likeView = {'TF':false, 'text':'꺼짐'};
+        $scope.like.light = false;
       }
+      
+      $scope.likeToggle = function(){
+        if(!$scope.isLogin()) { 
+          $scope.move('/login?redirectUrl='+$scope.webInfo.currentPath); 
+        }else {
+          if($scope.like.id) {
+            LikeOff($scope.simnut.id, $scope.userInfo.id, $scope.like.id).then(function(res){
+              if(res) {
+                $scope.like.light = false;
+                $scope.like.id = null;
+              }
+            });
+          } else {
+            LikeOn($scope.simnut.id, $scope.userInfo.id).then(function(res){
+              if(res) {
+                $scope.like.light = true;
+                $scope.like.id = res.insertId;
+              }
+            });
+          }
+        }
+      };
+    }])
+    .controller('WriteCtrl', ['$scope', 'SimnutSave', function($scope, SimnutSave){
+      $scope.write = {
+        'user_id': $scope.userInfo.id,
+        'title': '',
+        'description': '',
+        'content': '',
+        'variables': [{'value':''}],
+        'is_anonymous':false
+      }
+      
+      $scope.addVariables = function(){
+        $scope.write.variables.push({'value':''});
+      };
+      
+      $scope.simnutSave = function(){
+        SimnutSave($scope.write).then(function(res){
+          if(res) {
+            console.log(res);
+          } else {
+            var tmp = []
+            for(var i in $scope.write.variables) {
+              tmp.push({'value':$scope.write.variables[i]});
+            }
+            $scope.write.variables = tmp;
+          }
+        });
+      };
     }])
     
     .controller('ShareCtrl', ['$scope', function($scope){

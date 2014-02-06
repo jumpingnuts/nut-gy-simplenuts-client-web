@@ -2,7 +2,7 @@ define(['angular', 'services/user'], function (angular) {
   'use strict';
 
   angular.module('userCtrls', ['userServices'])
-    .controller('UserCtrl', ['$scope', 'User', function ($scope, User) {
+    .controller('UserCtrl', ['$scope', '$location', 'User', function ($scope, $location, User) {
       $scope.userInfo = {};
       
       //session login
@@ -21,6 +21,7 @@ define(['angular', 'services/user'], function (angular) {
         $scope.userInfo = {};
 //        $scope.move( '/list/trends' );
       };
+
     }])
     .controller('LoginCtrl', ['$scope', '$routeParams', 'UserLogin', function($scope, $routeParams, UserLogin){
       $scope.loginAction = function(){
@@ -35,10 +36,18 @@ define(['angular', 'services/user'], function (angular) {
       };
     }])
     .controller('RegistCtrl', ['$scope', 'UserRegist', function($scope, UserRegist){
-      //
+      $scope.regist = {
+        'username': '',
+        'password': '',
+        'password_confirm': '',
+        'age': 20,
+        'gender': '여',
+      }
+      
+      
       $scope.userRegist = function(){
-        //form data
-        UserRegist(frmData).then(function(res){
+console.log($scope.regist);
+        UserRegist($scope.regist).then(function(res){
           //res가 성공이면 로그인 처리 후 list/trends페이지로
         });
       }

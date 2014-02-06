@@ -71,10 +71,13 @@
     </p>
     
     <p class="text-center">
-      <button class="btn btn-lg" ng-class="{'btn-default':!likeView.TF, 'btn-success':likeView.TF, 'active':likeView.TF}">
+      <button 
+        class="btn btn-lg" 
+        ng-class="{'btn-default':!like.light, 'btn-success':like.light, 'active':like.light}" 
+        ng-click="likeToggle()">
         <h1>
           <i class="fa fa-likebulb-o"></i>
-          <span>{{likeView.text}}</span>
+          <span>{{like.text[like.light]}}</span>
         </h1>
         좋아요 수 : 
         <span class="count_likes">

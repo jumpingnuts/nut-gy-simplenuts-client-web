@@ -8,6 +8,7 @@ require.config({
     angularMD5: '../../bower_components/angular-md5/angular-md5',
     text: '../../bower_components/requirejs-text/text',
     jquery: '../../bower_components/jquery/jquery',
+    kakao: '../../scripts/lib/kakao.link.min',
   },
   shim: {
     'angular' : {'exports' : 'angular'},

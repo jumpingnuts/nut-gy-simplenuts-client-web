@@ -33,7 +33,6 @@ define([
         'userCtrls',
         'commentCtrls',
         'mainServices',
-//        'userService',
         'directives',
         'filters',
         'ngRoute'
@@ -55,6 +54,10 @@ define([
             }
           },
           templateUrl : '/views/view.html'
+        })
+        .when('/write', {
+          controller : 'WriteCtrl',
+          templateUrl : '/views/write.html'
         })
         .when('/login', {
           controller : 'LoginCtrl',

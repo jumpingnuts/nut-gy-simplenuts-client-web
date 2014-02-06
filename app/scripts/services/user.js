@@ -20,10 +20,10 @@ define(['angular'], function (angular) {
     .factory('UserRegist', [ 'User', '$route', '$q', function(User, $route, $q) {
       return function(save) {
         var delay = $q.defer();
-        Simnut.save(save, function(simnut) {
-          delay.resolve(simnut);
+        Simnut.save(save, function(res) {
+          delay.resolve(res);
         }, function() {
-          delay.reject($route.current.params.simnutId + '의 테스트를 가져올 수 없습니다');
+          delay.reject('query fail');
         });
         return delay.promise;
       };
