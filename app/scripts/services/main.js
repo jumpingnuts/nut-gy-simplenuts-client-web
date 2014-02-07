@@ -3,10 +3,11 @@ define(['angular'], function (angular) {
   
   angular.module('mainServices', [ 'ngResource' ])
     .factory('Simnut', [ '$resource', function($resource) {
-        return $resource('/dummy/view.json');
+        return $resource('http://dev.jumpingnuts.com:9000/api/kakaoapp/app/:id');
+//        return $resource('/dummy/app.json');
     }])
-    .factory('MultiSimnutLoader', [ 'Simnut', '$routeParams', '$q', function(Simnut, $routeParams, $q) {
-      return function(page, type) {
+    .factory('MultiSimnutLoader', [ 'Simnut', '$q', function(Simnut, $q) {
+      return function(page, type, userId) {
         page = page?page:1;
         type = type?type:'trends';
         var limit = 20;
@@ -25,26 +26,27 @@ define(['angular'], function (angular) {
           'limit':limit,
           'order':order
         };
-        if($routeParams.userId) {
-          param.user_id = $routeParams.userId;
+
+        if(type=='mine' && userId) {
+          param.user_id = userId;
         }
         
         var delay = $q.defer();
         Simnut.query(param, function(simnuts) {
           delay.resolve(simnuts);
-        }, function() {
-          delay.reject('api fail');
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };
     }])
-    .factory('SimnutLoader', [ 'Simnut', '$routeParams', '$q', function(Simnut, $routeParams, $q) {
+    .factory('SimnutLoader', [ 'Simnut', '$route', '$q', function(Simnut, $route, $q) {
       return function() {
         var delay = $q.defer();
-        Simnut.get({ id : $routeParams.simnutId }, function(simnut) {
+        Simnut.get({ id : $route.current.params.simnutId }, function(simnut) {
           delay.resolve(simnut);
-        }, function() {
-          delay.reject('api fail');
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };
@@ -60,23 +62,23 @@ define(['angular'], function (angular) {
         var delay = $q.defer();
         Simnut.save(data, function(simnut) {
           delay.resolve(simnut);
-        }, function() {
-          delay.reject('api fail');
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };
     }])
     
     .factory('Like', [ '$resource', function($resource) {
-        return $resource('/dummy/like.json');
+        return $resource('http://dev.jumpingnuts.com:9000/api/kakaoapp/like/:like_id');
     }])
     .factory('LikeView', [ 'Like', '$q', function(Like, $q) {
       return function(simnutId, userId) {
         var delay = $q.defer();
         Like.get({ 'app_id' : simnutId, 'user_id' : userId}, function(likeView) {
           delay.resolve(likeView);
-        }, function() {
-          delay.reject('api fail');
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };
@@ -86,8 +88,8 @@ define(['angular'], function (angular) {
         var delay = $q.defer();
         Like.save({ 'app_id': simnutId, 'user_id': userId}, function(res) {
           delay.resolve(res);
-        }, function() {
-          delay.reject('api fail');
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };
@@ -98,8 +100,8 @@ define(['angular'], function (angular) {
         var delay = $q.defer();
         Like.delete({ 'app_id': simnutId, 'user_id': userId, 'like_id': likeId}, function(res) {
           delay.resolve(res);
-        }, function() {
-          delay.reject('api fail');
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };

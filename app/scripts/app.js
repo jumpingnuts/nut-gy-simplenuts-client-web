@@ -35,9 +35,9 @@ define([
         'mainServices',
         'directives',
         'filters',
-        'ngRoute'
+        'ngRoute',
+        'ui.bootstrap'
       ], function ($routeProvider) {
-        
       //view1 경로 설정
       $routeProvider
         .when('/list/:type', {
@@ -79,10 +79,16 @@ define([
         'company': 'Jumping Nuts Inc.',
         'establishmentYear': '2013',
       };
-      $scope.$watch('$locationChangeSuccess', function(){
+      
+      $scope.$on('$routeChangeStart', function(){
         $scope.webInfo.currentUrl=$location.absUrl();
         $scope.webInfo.currentPath=$location.path();
+        $scope.alerts = [];
       });
+      
+      $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+      };
       
       $scope.nav = {
         'active': 'trends',
@@ -106,7 +112,8 @@ define([
       };
       
       $scope.adsenseLoad = function(){
-        (adsbygoogle = window.adsbygoogle || []).push({});
+//chk : 애드센스 403오류      
+//        (adsbygoogle = window.adsbygoogle || []).push({});
       }
       
       $scope.move = function ( url ) {

@@ -3,8 +3,8 @@ define(['angular', 'services/comment'], function (angular) {
 
   angular.module('commentCtrls', ['commentServices'])
     .controller('CommentCtrl', [ '$scope', 'CommentLoader', 'CommentWrite', function($scope, CommentLoader, CommentWrite){
-      $scope.content = '';
       $scope.comment = {
+        content: '',
         page: 1,
         type: 'new',
         data: []
@@ -17,9 +17,12 @@ define(['angular', 'services/comment'], function (angular) {
       $scope.commentLoad();
       
       $scope.commentWrite = function(){
-        CommentWrite($scope.webInfo.currentUrl, $scope.content, $scope.userInfo.id).then(function(res){
-          $scope.comment.push($scope.content);
-          $scope.content = '';
+        if(!$scope.isLogin()) { 
+          $scope.moveLogin();
+        }
+        CommentWrite($scope.webInfo.currentUrl, $scope.comment.content, $scope.userInfo.id).then(function(res){
+          $scope.commentLoad();
+          $scope.comment.content = '';
         });
       };
     }])

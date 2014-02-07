@@ -3,15 +3,15 @@ define(['angular'], function (angular) {
   
   angular.module('userServices', [ 'ngResource' ])
     .factory('User', [ '$resource', function($resource) {
-        return $resource('/dummy/login.json');
+        return $resource('http://dev.jumpingnuts.com:9000/api/user', null, {'login':{method:'POST'}});
     }])
     .factory('UserLogin', [ 'User', '$route', '$q', function(User, $route, $q) {
       return function(id, pw) {
         var delay = $q.defer();
-        User.get({ 'username': id, 'password': pw }, function(user) {
-          delay.resolve(user);
-        }, function() {
-          delay.reject('로그인 정보가 없습니다.');
+        User.login({ 'username': id, 'password': pw }, function(res) {
+          delay.resolve(res);
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };
@@ -20,10 +20,10 @@ define(['angular'], function (angular) {
     .factory('UserRegist', [ 'User', '$route', '$q', function(User, $route, $q) {
       return function(save) {
         var delay = $q.defer();
-        Simnut.save(save, function(res) {
+        User.save(save, function(res) {
           delay.resolve(res);
-        }, function() {
-          delay.reject('query fail');
+        }, function(res) {
+          delay.reject(res);
         });
         return delay.promise;
       };

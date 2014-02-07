@@ -1,9 +1,9 @@
-<div class="row" ng-scrolled="listLoad()">
+<div class="row" ng-scroll-event="listLoad()">
   <div class="col-lg-12">
     <h3>{{nav.items[nav.active].name}}</h3>
     <hr />
   </div>
-  <div ng-repeat="simnut in simnuts" class="col-lg-4" ng-click="move('/#/app/'+simnut.id);">
+  <div ng-repeat="simnut in simnuts" class="col-lg-4" ng-click="move('/app/'+simnut.id);">
     <h4>
       <a ng-href="/#/simnut/{{simnut.id}}">
         {{simnut.title}}

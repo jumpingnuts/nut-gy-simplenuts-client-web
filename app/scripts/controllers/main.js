@@ -13,22 +13,29 @@ define(['angular', 'services/main', 'kakao'], function (angular) {
     .controller('ListCtrl', 
       ['$scope',
        '$routeParams',
+       '$window',
        'MultiSimnutLoader',
-       function($scope, $routeParams, MultiSimnutLoader){
-
+       function($scope, $routeParams, $window, MultiSimnutLoader){
+       
       $scope.simnuts = [];
       $scope.isLoad = false;
       $scope.page = 1;
       $scope.type = $scope.nav.active = $routeParams.type;
 
+      if($scope.type=='mine' && !$scope.isLogin()) {
+        $scope.moveLogin();
+      }
+      
       $scope.listLoad = function(){
         if($scope.isLoad) {return false;}
         $scope.isLoad = true;
-        MultiSimnutLoader($scope.page, $scope.type).then(function(res){
-          $scope.simnuts = $scope.simnuts.concat(res);
-          $scope.isLoad = false;
+        MultiSimnutLoader($scope.page, $scope.type, $scope.userInfo.id).then(function(res){
+          if(res.length > 0) {
+            $scope.simnuts = $scope.simnuts.concat(res);
+            $scope.page++;
+            $scope.isLoad = false;
+          }
         });
-        $scope.page++;
       };
       
       $scope.listLoad();
@@ -44,6 +51,8 @@ define(['angular', 'services/main', 'kakao'], function (angular) {
       'LikeOn',
       'LikeOff',
       function($scope, $route, $routeParams, md5, simnut, LikeView, LikeOn, LikeOff){
+      
+      if(!simnut.id) { $scope.move('/list/trends'); }
       
       $scope.inputName = '';
       $scope.result = '';
@@ -84,23 +93,23 @@ define(['angular', 'services/main', 'kakao'], function (angular) {
       
       $scope.likeToggle = function(){
         if(!$scope.isLogin()) { 
-          $scope.move('/login?redirectUrl='+$scope.webInfo.currentPath); 
-        }else {
-          if($scope.like.id) {
-            LikeOff($scope.simnut.id, $scope.userInfo.id, $scope.like.id).then(function(res){
-              if(res) {
-                $scope.like.light = false;
-                $scope.like.id = null;
-              }
-            });
-          } else {
-            LikeOn($scope.simnut.id, $scope.userInfo.id).then(function(res){
-              if(res) {
-                $scope.like.light = true;
-                $scope.like.id = res.insertId;
-              }
-            });
-          }
+          $scope.moveLogin();
+        } 
+
+        if($scope.like.id) {
+          LikeOff($scope.simnut.id, $scope.userInfo.id, $scope.like.id).then(function(res){
+            if(res) {
+              $scope.like.light = false;
+              $scope.like.id = null;
+            }
+          });
+        } else {
+          LikeOn($scope.simnut.id, $scope.userInfo.id).then(function(res){
+            if(res) {
+              $scope.like.light = true;
+              $scope.like.id = res.insertId;
+            }
+          });
         }
       };
     }])
@@ -120,8 +129,8 @@ define(['angular', 'services/main', 'kakao'], function (angular) {
       
       $scope.simnutSave = function(){
         SimnutSave($scope.write).then(function(res){
-          if(res) {
-            console.log(res);
+          if(res.insertId) {
+            $scope.move('/simnut/'+res.insertId);
           } else {
             var tmp = []
             for(var i in $scope.write.variables) {

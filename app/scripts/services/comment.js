@@ -3,13 +3,13 @@ define(['angular'], function (angular) {
   
   angular.module('commentServices', [ 'ngResource' ])
     .factory('Comment', [ '$resource', function($resource) {
-        return $resource('/dummy/comment.json');
+        return $resource('http://dev.jumpingnuts.com:9000/api/comment');
     }])
     .factory('CommentLoader', [ 'Comment', '$q', function(Comment, $q) {
       return function(page, key, type) {
         if(!key) { return false; }
         page = page || 1;
-        var limit = 20;
+        var limit = 200;
         var order = null;
         var type = type || 'new';
         switch(type) {
@@ -28,8 +28,8 @@ define(['angular'], function (angular) {
         var delay = $q.defer();
         Comment.query(param, function(simnuts) {
             delay.resolve(simnuts);
-        }, function() {
-            delay.reject('api fail');
+        }, function(res) {
+            delay.reject(res);
         });
         return delay.promise;
       };
@@ -45,10 +45,10 @@ define(['angular'], function (angular) {
         };
         
         var delay = $q.defer();
-        Comment.save(param, function(simnuts) {
-            delay.resolve(simnuts);
-        }, function() {
-            delay.reject('api fail');
+        Comment.save(param, function(res) {
+            delay.resolve(res);
+        }, function(res) {
+            delay.reject(res);
         });
         return delay.promise;
       };

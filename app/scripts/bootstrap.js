@@ -6,6 +6,7 @@ require.config({
     angularResource: '../../bower_components/angular-resource/angular-resource',
     angularSanitize: '../../bower_components/angular-sanitize/angular-sanitize',
     angularMD5: '../../bower_components/angular-md5/angular-md5',
+    angularBootstrap: '../../bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
     text: '../../bower_components/requirejs-text/text',
     jquery: '../../bower_components/jquery/jquery',
     kakao: '../../scripts/lib/kakao.link.min',
@@ -27,6 +28,9 @@ require.config({
     },
     'angularMD5': {
         deps:['angular']
+    },
+    'angularBootstrap': {
+        deps:['angular']
     }
   },
   priority: [
@@ -44,7 +48,8 @@ require([
   'angularRoute',
   'angularResource',
   'angularSanitize',
-  'angularMD5'
+  'angularMD5',
+  'angularBootstrap'
 ], function(angular, $) {
   'use strict';
   $(document).ready(function () {

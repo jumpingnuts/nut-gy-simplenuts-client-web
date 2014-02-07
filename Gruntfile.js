@@ -304,7 +304,7 @@ module.exports = function (grunt) {
     //   dist: {
     //     files: {
     //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
+    //       '<%= yeoman.dist %>/scripts/scripts.js'
     //       ]
     //     }
     //   }
@@ -361,8 +361,8 @@ module.exports = function (grunt) {
     'ngmin',
     'copy:dist',
     'cdnify',
-    'cssmin',
-    'uglify',
+//    'cssmin',
+//    'uglify',
     'rev',
     'usemin',
     'htmlmin'

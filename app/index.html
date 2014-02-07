@@ -32,6 +32,7 @@
     <div class="container">
       <div ng-include="'views/navbar.html'"></div>
       <div ng-include="'views/ad.html'" onload="adsenseLoad()"></div>
+      <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
       <div ng-view></div>
       <div ng-include="'views/footer.html'"></div>
     </div>
