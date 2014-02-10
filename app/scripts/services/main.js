@@ -94,7 +94,6 @@ define(['angular'], function (angular) {
         return delay.promise;
       };
     }])
-    
     .factory('LikeOff', [ 'Like', '$q', function(Like, $q) {
       return function(simnutId, userId, likeId) {
         var delay = $q.defer();
@@ -106,5 +105,53 @@ define(['angular'], function (angular) {
         return delay.promise;
       };
     }])
-    ;
+    
+    .factory('ShareFunc', function(){
+      return {
+        kakaoTalk: function(data){
+          kakao.link("talk").send({
+              msg : data.title+'\n\n'+data.content+'\n\n'+data.currentUrl,
+              url : data.marketUrl,
+              appid : data.appId,
+              appver : "1.0",
+              appname : "심심풀이 너츠",
+              type : "link"
+          });
+        },
+        
+        kakaoStory: function(data){
+          kakao.link("story").send({   
+            post : '[심심풀이 너츠] '+data.title+'\n\n'+content+'\n\n'+data.currentUrl+'\n\n안드로이드 : '+data.marketUrl,
+            appid : data.appId,
+            appver : "1.0",
+            appname : "심심풀이 너츠",
+            urlinfo : JSON.stringify({
+              title: data.title, 
+              desc: data.content.substring(0,80)+'...', 
+              imageurl:[data.currentImage], 
+              type:"app"
+            })
+          });
+        },
+  
+        twitter: function(data){
+          window.location.href = 'https://twitter.com/intent/tweet?'+
+            'original_referer='+encodeURIComponent(data.currentUrl)+
+            '&text='+encodeURIComponent('[심심풀이 너츠] '+data.title+'\n'+data.content.replace(/\n/gi, " ").substring(0,60))+'\n\n'+
+            '&url='+encodeURIComponent(data.marketUrl);
+        },
+  
+        facebook: function(data){
+          window.location.href = 'http://www.facebook.com/sharer.php?m2w&s=100'+
+            '&p[url]='+encodeURIComponent(data.marketUrl)+
+            '&p[images][0]='+encodeURIComponent(data.currentImage)+
+            '&p[title]='+data.title+
+            '&p[summary]='+data.content;
+        },
+        
+        postText : function(data){
+          return '[심심풀이 너츠] '+data.title+'\n\n'+data.content+'\n\n안드로이드 : '+data.marketUrl;
+        }
+      };
+    });
 });

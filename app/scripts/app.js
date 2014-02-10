@@ -5,9 +5,6 @@ define([
     'angular', //앵귤러 모듈을 사용하기 위해 임포트
     'controllers/main',
     'controllers/user',
-    'controllers/comment',
-    'services/main',
-    'services/user',
     'directives/directives',
     'filters/filters'
   ],
@@ -31,8 +28,9 @@ define([
       'simsimNuts', [
         'mainCtrls',
         'userCtrls',
-        'commentCtrls',
         'mainServices',
+        'userServices',
+        'nativeServices',
         'directives',
         'filters',
         'ngRoute',
@@ -86,6 +84,7 @@ define([
         $scope.webInfo.currentUrl=$location.absUrl();
         $scope.webInfo.currentPath=$location.path();
         $scope.alerts = [];
+        $scope.nav.navCollapsed = true;
       });
       
       $scope.closeAlert = function(index) {
@@ -103,6 +102,7 @@ define([
       };
 
       $scope.marketInfo = {
+        'appId': 'com.jumpingnuts.simsimNuts', 
         'url' : 'https://play.google.com/store/apps/details?id=com.jumpingnuts.simsimNuts',
         'urlCustom' : 'market://details?id=com.jumpingnuts.simsimNuts'
       };
@@ -121,6 +121,32 @@ define([
       $scope.move = function ( url ) {
         $location.url( url );
       };
+    }]);
+    
+    app.controller('NativeCtrl', ['$scope', 'NativeFunc', 'UserConnectionLogin', function($scope, NativeFunc, UserConnectionLogin){
+      $scope.loginCallback = function(res){
+        if(JSON.parse(res).response == 200) {
+          $scope.userInfo.connection.push('kakao');
+          $scope.userConnection = {'kakao' : JSON.parse(window.android.getUserInfo())};
+
+          NativeFunc.notiRegist($scope.userConnection.kakao.username);
+          if($scope.userConnection.kakao.properties.uid && $scope.userConnection.kakao.properties.key) {
+            new UserConnectionLogin(
+              $scope.userConnection.kakao.properties.uid,
+              'kakao',
+              $scope.userConnection.kakao.properties.key
+            ).then(function(res, code){
+              if(code === 200) {
+                $scope.userInfo = res;
+              }
+            });
+          }
+        }
+
+      };
+      //getUserInfo
+      //setUserInfo
+      //uploadStoryPost
     }]);
     
     return app;
