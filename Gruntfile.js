@@ -31,6 +31,7 @@ module.exports = function (grunt) {
           logLevel: 0,
           baseUrl: 'app/scripts/',
           name: 'app',
+          insertRequire: ['app/scripts/bootstrap.js'],
           mainConfigFile: 'app/scripts/bootstrap.js',
           out: '<%= yeoman.dist %>/scripts/app.min.js',
           optimize:"uglify2",
