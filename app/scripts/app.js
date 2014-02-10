@@ -18,7 +18,7 @@ define([
   디펜던시들이 리턴하는 객체들을 콜백함수의 파라메터로 받게 되는데,
   자세히보면 route-config와 같이 snake case로 된 파일명이,
   파라메터로 받을 때는 routeConfig와 같이 camel case로 바뀌는 것을 볼 수 있다.
-*/  
+*/
   //디펜던시 로드뒤 콜백함수
   function (angular) {
   
@@ -37,38 +37,40 @@ define([
         'filters',
         'ngRoute',
         'ui.bootstrap'
-      ], function ($routeProvider) {
+      ],
+      function ($routeProvider) {
       //view1 경로 설정
-      $routeProvider
-        .when('/list/:type', {
-          //template: '<div></div>',
-          controller : 'ListCtrl',
-          templateUrl : '/views/list.html'
-        })
-        .when('/simnut/:simnutId', {
-          //template: '<div></div>',
-          controller : 'ViewCtrl',
-          resolve : {
-            simnut : function(SimnutLoader) {
-                return SimnutLoader();
-            }
-          },
-          templateUrl : '/views/view.html'
-        })
-        .when('/write', {
-          controller : 'WriteCtrl',
-          templateUrl : '/views/write.html'
-        })
-        .when('/login', {
-          controller : 'LoginCtrl',
-          templateUrl : '/views/signin.html'
-        })
-        .when('/regist', {
-          controller : 'RegistCtrl',
-          templateUrl : '/views/regist.html'
-        })
-        .otherwise({redirectTo:'/list/trends'});
-    });
+        $routeProvider
+          .when('/list/:type', {
+            //template: '<div></div>',
+            controller : 'ListCtrl',
+            templateUrl : '/views/list.html'
+          })
+          .when('/simnut/:simnutId', {
+            //template: '<div></div>',
+            controller : 'ViewCtrl',
+            resolve : {
+              simnut :
+                function(SimnutLoader) {
+                  return new SimnutLoader();
+                }
+            },
+            templateUrl : '/views/view.html'
+          })
+          .when('/write', {
+            controller : 'WriteCtrl',
+            templateUrl : '/views/write.html'
+          })
+          .when('/login', {
+            controller : 'LoginCtrl',
+            templateUrl : '/views/signin.html'
+          })
+          .when('/regist', {
+            controller : 'RegistCtrl',
+            templateUrl : '/views/regist.html'
+          })
+          .otherwise({redirectTo:'/list/trends'});
+      });
     
     //공통 컨트롤러 설정 - 모든 컨트롤러에서 공통적으로 사용하는 부분들 선언
     app.controller('CommonController', ['$scope', '$location', function($scope, $location) {
@@ -108,19 +110,19 @@ define([
       $scope.adInfo = {
         'width' : w<468 ? '320' : (w<728 ? '468' : '728'),
         'height' : w<468 ? '100' : (w<728 ? '60' : '90'),
-        'slot' : w<468 ? "2879098937" : (w<728 ? "6250720936" : "7386363738")
+        'slot' : w<468 ? '2879098937' : (w<728 ? '6250720936' : '7386363738')
       };
       
       $scope.adsenseLoad = function(){
 //chk : 애드센스 403오류      
 //        (adsbygoogle = window.adsbygoogle || []).push({});
-      }
+      };
       
       $scope.move = function ( url ) {
         $location.url( url );
       };
     }]);
     
-    return app; 
-   }
+    return app;
+  }
 );

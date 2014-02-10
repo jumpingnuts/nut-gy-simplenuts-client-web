@@ -1,15 +1,16 @@
 require.config({
+  baseUrl: '/scripts',
   paths: {
-    angular: '../../bower_components/angular/angular',
-    angularMocks: '../../bower_components/angular-mocks/angular-mocks',
-    angularRoute: '../../bower_components/angular-route/angular-route',
-    angularResource: '../../bower_components/angular-resource/angular-resource',
-    angularSanitize: '../../bower_components/angular-sanitize/angular-sanitize',
-    angularMD5: '../../bower_components/angular-md5/angular-md5',
-    angularBootstrap: '../../bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
-    text: '../../bower_components/requirejs-text/text',
-    jquery: '../../bower_components/jquery/jquery',
-    kakao: '../../scripts/lib/kakao.link.min',
+    angular: '../bower_components/angular/angular',
+    angularMocks: '../bower_components/angular-mocks/angular-mocks',
+    angularRoute: '../bower_components/angular-route/angular-route',
+    angularResource: '../bower_components/angular-resource/angular-resource',
+    angularSanitize: '../bower_components/angular-sanitize/angular-sanitize',
+    angularMD5: '../bower_components/angular-md5/angular-md5',
+    angularBootstrap: '../bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
+    text: '../bower_components/requirejs-text/text',
+    jquery: '../bower_components/jquery/jquery',
+    kakao: 'lib/kakao.link.min',
   },
   shim: {
     'angular' : {'exports' : 'angular'},
@@ -17,21 +18,11 @@ require.config({
       deps:['angular'],
       'exports':'angular.mock'
     },
-    'angularRoute': {
-        deps:['angular']
-    },
-    'angularResource': {
-        deps:['angular']
-    },
-    'angularSanitize': {
-        deps:['angular']
-    },
-    'angularMD5': {
-        deps:['angular']
-    },
-    'angularBootstrap': {
-        deps:['angular']
-    }
+    'angularRoute': { deps:['angular'] },
+    'angularResource': { deps:['angular'] },
+    'angularSanitize': { deps:['angular'] },
+    'angularMD5': { deps:['angular'] },
+    'angularBootstrap': { deps:['angular'] }
   },
   priority: [
     'angular'

@@ -10,36 +10,36 @@ define(['angular', 'services/main', 'kakao'], function (angular) {
         'Karma'
       ];
     }])
-    .controller('ListCtrl', 
-      ['$scope',
-       '$routeParams',
-       '$window',
-       'MultiSimnutLoader',
-       function($scope, $routeParams, $window, MultiSimnutLoader){
-       
-      $scope.simnuts = [];
-      $scope.isLoad = false;
-      $scope.page = 1;
-      $scope.type = $scope.nav.active = $routeParams.type;
-
-      if($scope.type=='mine' && !$scope.isLogin()) {
-        $scope.moveLogin();
+    .controller('ListCtrl', [
+      '$scope',
+      '$routeParams',
+      '$window',
+      'MultiSimnutLoader',
+      function($scope, $routeParams, $window, MultiSimnutLoader) {
+        $scope.simnuts = [];
+        $scope.isLoad = false;
+        $scope.page = 1;
+        $scope.type = $scope.nav.active = $routeParams.type;
+  
+        if($scope.type==='mine' && !$scope.isLogin()) {
+          $scope.moveLogin();
+        }
+        
+        $scope.listLoad = function(){
+          if($scope.isLoad) {return false;}
+          $scope.isLoad = true;
+          new MultiSimnutLoader($scope.page, $scope.type, $scope.userInfo.id).then(function(res){
+            if(res.length > 0) {
+              $scope.simnuts = $scope.simnuts.concat(res);
+              $scope.page++;
+              $scope.isLoad = false;
+            }
+          });
+        };
+        
+        $scope.listLoad();
       }
-      
-      $scope.listLoad = function(){
-        if($scope.isLoad) {return false;}
-        $scope.isLoad = true;
-        MultiSimnutLoader($scope.page, $scope.type, $scope.userInfo.id).then(function(res){
-          if(res.length > 0) {
-            $scope.simnuts = $scope.simnuts.concat(res);
-            $scope.page++;
-            $scope.isLoad = false;
-          }
-        });
-      };
-      
-      $scope.listLoad();
-    }])
+    ])
     
     .controller('ViewCtrl', 
       ['$scope',

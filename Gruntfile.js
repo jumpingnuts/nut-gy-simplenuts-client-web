@@ -1,4 +1,4 @@
-// Generated on 2014-02-01 using generator-angular-require 0.1.4
+// Generated on 2014-02-09 using generator-angular 0.7.1
 'use strict';
 
 // # Globbing
@@ -17,7 +17,28 @@ module.exports = function (grunt) {
 
   // Define the configuration for all the tasks
   grunt.initConfig({
-
+    requirejs: {
+      compile: {
+        options: {
+          //Sets the logging level. It is a number. If you want "silent" running,
+          //set logLevel to 4. From the logger.js file:
+          //TRACE: 0,
+          //INFO: 1,
+          //WARN: 2,
+          //ERROR: 3,
+          //SILENT: 4
+          //Default is 0.
+          logLevel: 0,
+          baseUrl: 'app/scripts/',
+          name: 'app',
+          mainConfigFile: 'app/scripts/bootstrap.js',
+          out: '<%= yeoman.dist %>/scripts/app.min.js',
+          optimize:"uglify2",
+          skipDirOptimize: false
+        }
+      }
+    },
+    
     // Project settings
     yeoman: {
       // configurable paths
@@ -146,8 +167,6 @@ module.exports = function (grunt) {
         ignorePath: '<%= yeoman.app %>/'
       }
     },
-
-
 
     // Renames files for browser caching purposes
     rev: {
@@ -304,7 +323,7 @@ module.exports = function (grunt) {
     //   dist: {
     //     files: {
     //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //       '<%= yeoman.dist %>/scripts/scripts.js'
+    //         '<%= yeoman.dist %>/scripts/scripts.js'
     //       ]
     //     }
     //   }
@@ -322,6 +341,8 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-usemin');
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
@@ -338,9 +359,9 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('server', function (target) {
+  grunt.registerTask('server', function () {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
+    grunt.task.run(['serve']);
   });
 
   grunt.registerTask('test', [
@@ -361,8 +382,9 @@ module.exports = function (grunt) {
     'ngmin',
     'copy:dist',
     'cdnify',
-//    'cssmin',
+    'cssmin',
 //    'uglify',
+    'requirejs',
     'rev',
     'usemin',
     'htmlmin'

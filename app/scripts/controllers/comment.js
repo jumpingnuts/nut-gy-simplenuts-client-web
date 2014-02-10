@@ -10,20 +10,20 @@ define(['angular', 'services/comment'], function (angular) {
         data: []
       };
       $scope.commentLoad = function(){
-        CommentLoader($scope.comment.page, $scope.webInfo.currentUrl, $scope.comment.type).then(function(res){
+        new CommentLoader($scope.comment.page, $scope.webInfo.currentUrl, $scope.comment.type).then(function(res){
           $scope.comment.data = res;
         });
-      }
+      };
       $scope.commentLoad();
       
       $scope.commentWrite = function(){
-        if(!$scope.isLogin()) { 
+        if(!$scope.isLogin()) {
           $scope.moveLogin();
         }
-        CommentWrite($scope.webInfo.currentUrl, $scope.comment.content, $scope.userInfo.id).then(function(res){
+        new CommentWrite($scope.webInfo.currentUrl, $scope.comment.content, $scope.userInfo.id).then(function(){
           $scope.commentLoad();
           $scope.comment.content = '';
         });
       };
-    }])
+    }]);
 });
