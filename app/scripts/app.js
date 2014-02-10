@@ -44,7 +44,7 @@ define([
           .when('/list/:type', {
             //template: '<div></div>',
             controller : 'ListCtrl',
-            templateUrl : '/views/list.html'
+            templateUrl : './views/list.html'
           })
           .when('/simnut/:simnutId', {
             //template: '<div></div>',
@@ -55,19 +55,19 @@ define([
                   return new SimnutLoader();
                 }
             },
-            templateUrl : '/views/view.html'
+            templateUrl : './views/view.html'
           })
           .when('/write', {
             controller : 'WriteCtrl',
-            templateUrl : '/views/write.html'
+            templateUrl : './views/write.html'
           })
           .when('/login', {
             controller : 'LoginCtrl',
-            templateUrl : '/views/signin.html'
+            templateUrl : './views/signin.html'
           })
           .when('/regist', {
             controller : 'RegistCtrl',
-            templateUrl : '/views/regist.html'
+            templateUrl : './views/regist.html'
           })
           .otherwise({redirectTo:'/list/trends'});
       });

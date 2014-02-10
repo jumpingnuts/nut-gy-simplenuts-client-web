@@ -13,7 +13,7 @@
 
       </button>
         
-      <a class="navbar-brand" href="/#/">
+      <a class="navbar-brand" href="#/">
         <b ng-bind="webInfo.title"></b> <i class="fa fa-lightbulb-o"></i>
       </a>
 
@@ -22,21 +22,21 @@
     <div class="navbar-collapse" ng-class="{collapse:navCollapsed}">
 
       <ul class="nav navbar-nav">
-        <li ng-repeat="item in nav.items | orderObjectBy:'order'" ng-class="{active:nav.active==item.key, hide:item.hide&&!userInfo.isLogin}"><a ng-href="/#/list/{{item.key}}" ng-bind="item.name"></a></li>
+        <li ng-repeat="item in nav.items | orderObjectBy:'order'" ng-class="{active:nav.active==item.key, hide:item.hide&&!userInfo.isLogin}"><a ng-href="#/list/{{item.key}}" ng-bind="item.name"></a></li>
       </ul>
 
       <!-- user info -->
       <div class="navbar-right">
         <form class="navbar-form" ng-class="{hide:userInfo.isLogin}">
-          <a ng-href="/#/login?redirectUrl={{webInfo.currentPath}}">
+          <a ng-href="#/login?redirectUrl={{webInfo.currentPath}}">
             <button type="submit" class="btn btn-info">로그인</button>
           </a>
-          <a href="/#/regist">
+          <a href="#/regist">
             <button type="button" class="btn btn-warning">회원가입</button>
           </a>
         </form>
         <div class="navbar-form" ng-class="{hide:!userInfo.isLogin}">
-          <a href="/#/write">
+          <a href="#/write">
             <button type="button" class="btn btn-info">
               앱 만들기
             </button>

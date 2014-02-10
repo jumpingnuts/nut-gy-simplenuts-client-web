@@ -1,5 +1,5 @@
 require.config({
-  baseUrl: '/scripts',
+  baseUrl: './scripts',
   paths: {
     angular: '../bower_components/angular/angular',
     angularMocks: '../bower_components/angular-mocks/angular-mocks',
