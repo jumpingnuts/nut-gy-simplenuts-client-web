@@ -38,9 +38,9 @@ require([
   'angular',
   'jquery',
   'app',
+  'angularCookies',
   'angularRoute',
   'angularSanitize',
-  'angularMD5',
   'angularBootstrap'
 ], function(angular, $) {
   'use strict';

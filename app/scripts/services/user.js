@@ -1,9 +1,9 @@
-define(['angular', 'angularResource', 'angularCookies'], function (angular) {
+define(['angular', 'angularResource'], function (angular) {
   'use strict';
   
-  angular.module('userServices', [ 'ngResource', 'ngCookies'])
+  angular.module('userServices', [ 'ngResource'])
     .factory('Auth', [ '$rootScope', '$resource', function($rootScope, $resource) {
-        return $resource($rootScope.apiInfo.baseUrl+'/auth/user', null, {'login':{method:'POST'}});
+      return $resource($rootScope.apiInfo.baseUrl+'/auth/user', null, {'login':{method:'POST'}});
     }])
     .factory('UserLogin', [ 'Auth', '$route', '$q', function(Auth, $route, $q) {
       return function(id, pw) {

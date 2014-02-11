@@ -18,10 +18,24 @@ define(['angular', 'services/user', 'services/native'], function (angular) {
           if(window.android) {
             window.android.login("$('#nativeCallback').scope().loginCallback");
           } else {
-            new Auth.get({}, function(res, httpResponse) {
-              if(res) {
-                $scope.userInfo = res;
-              }
+new Auth.save({ 'email': 'test@test.com', 'password': 'test' }, function(res, code) {
+  $scope.userInfo.isLogin = true;
+  $scope.userInfo.id = res.id;
+  $scope.userInfo.email = res.email;
+  $scope.userInfo.is_confirmed = res.is_confirmed;
+  $scope.userInfo.updated = res.updated;
+
+});
+          
+            new Auth.get({}, function(res) {
+              $scope.userInfo.isLogin = true;
+              $scope.userInfo.id = res.id;
+              $scope.userInfo.email = res.email;
+              $scope.userInfo.is_confirmed = res.is_confirmed;
+              $scope.userInfo.updated = res.updated;
+            }, function(code){
+              console.log('sessLogin code:');
+              console.log(code);
             });
           }
         };
@@ -32,14 +46,16 @@ define(['angular', 'services/user', 'services/native'], function (angular) {
         };
         
         $scope.logout = function(){
-          new User.delete();
+          new Auth.delete();
           $scope.userInfo = {};
           $scope.userInfo.isLogin = false;
           $scope.move( '/list/trends' );
         };
         
         $scope.loginAction = function(){
-          new UserLogin($scope.userInfo.username, $scope.userInfo.password).then(function(res){
+          new UserLogin($scope.userInfo.username, $scope.userInfo.password).then(function(res, code){
+console.log(res);
+console.log(code);
             $scope.userInfo.password = '';
             if(res.id) {
               $scope.userInfo.isLogin = true;

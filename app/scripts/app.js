@@ -6,6 +6,7 @@ define([
     'controllers/main',
     'controllers/user',
     'directives/directives',
+    'angularResource',
     'filters/filters'
   ],
   
@@ -34,9 +35,12 @@ define([
         'directives',
         'filters',
         'ngRoute',
+        'ngResource',
+        'ngCookies',
         'ui.bootstrap'
-      ],
-      function ($routeProvider) {
+      ]);
+      
+    app.config(function($routeProvider){
       //view1 경로 설정
         $routeProvider
           .when('/list/:type', {
@@ -68,7 +72,12 @@ define([
             templateUrl : './views/regist.html'
           })
           .otherwise({redirectTo:'/list/trends'});
-      });
+      }
+    )
+    .config(function($httpProvider){
+      $httpProvider.defaults.withCredentials = true;
+    });
+//    app.config();
     
     //공통 컨트롤러 설정 - 모든 컨트롤러에서 공통적으로 사용하는 부분들 선언
     app.controller('CommonController', ['$rootScope', '$scope', '$location', function($rootScope, $scope, $location) {
@@ -86,7 +95,7 @@ define([
         'clientId': '0441c0011f37fec037843fcfe314366f',
         'responseType': 'token',
         'openType': 'iframe'//iframe, opener
-      }
+      };
       
       $scope.$on('$routeChangeStart', function(){
         $scope.webInfo.currentUrl=$location.absUrl();
@@ -110,7 +119,7 @@ define([
       };
 
       $scope.marketInfo = {
-        'appId': 'com.jumpingnuts.simsimNuts', 
+        'appId': 'com.jumpingnuts.simsimNuts',
         'url' : 'https://play.google.com/store/apps/details?id=com.jumpingnuts.simsimNuts',
         'urlCustom' : 'market://details?id=com.jumpingnuts.simsimNuts'
       };
@@ -133,7 +142,7 @@ define([
     
     app.controller('NativeCtrl', ['$scope', 'NativeFunc', 'UserConnectionLogin', function($scope, NativeFunc, UserConnectionLogin){
       $scope.loginCallback = function(res){
-        if(JSON.parse(res).response == 200) {
+        if(JSON.parse(res).response === 200) {
           $scope.userInfo.connection.push('kakao');
           $scope.userConnection = {'kakao' : JSON.parse(window.android.getUserInfo())};
 

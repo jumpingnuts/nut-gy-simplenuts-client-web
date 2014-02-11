@@ -1,7 +1,7 @@
-define(['angular',  'angularResource', 'angularCookies'], function (angular) {
+define(['angular',  'angularResource'], function (angular) {
   'use strict';
   
-  angular.module('mainServices', [ 'ngResource', 'ngCookies' ])
+  angular.module('mainServices', [ 'ngResource' ])
     .factory('Simnut', [ '$rootScope', '$resource', function($rootScope, $resource) {
         return $resource($rootScope.apiInfo.baseUrl+'/api/kakaoapp/app/:id');
 //        return $resource('/dummy/app.json');
@@ -32,8 +32,8 @@ define(['angular',  'angularResource', 'angularCookies'], function (angular) {
         }
         
         var delay = $q.defer();
-        Simnut.query(param, function(simnuts) {
-          delay.resolve(simnuts);
+        Simnut.query(param, function(res) {
+          delay.resolve(res);
         }, function(res) {
           delay.reject(res);
         });
@@ -43,8 +43,8 @@ define(['angular',  'angularResource', 'angularCookies'], function (angular) {
     .factory('SimnutLoader', [ 'Simnut', '$route', '$q', function(Simnut, $route, $q) {
       return function() {
         var delay = $q.defer();
-        Simnut.get({ id : $route.current.params.simnutId }, function(simnut) {
-          delay.resolve(simnut);
+        Simnut.get({ id : $route.current.params.simnutId }, function(res) {
+          delay.resolve(res);
         }, function(res) {
           delay.reject(res);
         });
@@ -60,8 +60,8 @@ define(['angular',  'angularResource', 'angularCookies'], function (angular) {
         }
         data.variables = tmp;
         var delay = $q.defer();
-        Simnut.save(data, function(simnut) {
-          delay.resolve(simnut);
+        Simnut.save(data, function(res) {
+          delay.resolve(res);
         }, function(res) {
           delay.reject(res);
         });
@@ -75,8 +75,8 @@ define(['angular',  'angularResource', 'angularCookies'], function (angular) {
     .factory('LikeView', [ 'Like', '$q', function(Like, $q) {
       return function(simnutId, userId) {
         var delay = $q.defer();
-        Like.get({ 'app_id' : simnutId, 'user_id' : userId}, function(likeView) {
-          delay.resolve(likeView);
+        Like.get({ 'app_id' : simnutId, 'user_id' : userId}, function(res) {
+          delay.resolve(res);
         }, function(res) {
           delay.reject(res);
         });
