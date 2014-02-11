@@ -2,8 +2,8 @@ define(['angular'], function (angular) {
   'use strict';
   
   angular.module('commentServices', [ 'ngResource' ])
-    .factory('Comment', [ '$resource', function($resource) {
-        return $resource('http://dev.jumpingnuts.com:9000/api/comment');
+    .factory('Comment', [ '$rootScope', '$resource', function($rootScope, $resource) {
+        return $resource($rootScope.apiInfo.baseUrl+'/api/comment');
     }])
     .factory('CommentLoader', [ 'Comment', '$q', function(Comment, $q) {
       return function(page, key, type) {

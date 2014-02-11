@@ -8,7 +8,7 @@ define(['angular', 'services/user', 'services/native'], function (angular) {
       'User',
       'UserLogin',
       'UserConnection',
-      function ($scope, $routeParams, User, UserLogin, UserConnection) {
+      function ($scope, $routeParams, Auth, UserLogin, UserConnection) {
         $scope.userInfo = {
           isLogin:false,
           connection: []
@@ -18,7 +18,7 @@ define(['angular', 'services/user', 'services/native'], function (angular) {
           if(window.android) {
             window.android.login("$('#nativeCallback').scope().loginCallback");
           } else {
-            new User.get({}, function(res, httpResponse) {
+            new Auth.get({}, function(res, httpResponse) {
               if(res) {
                 $scope.userInfo = res;
               }
@@ -92,11 +92,7 @@ define(['angular', 'services/user', 'services/native'], function (angular) {
     }])
     .controller('RegistCtrl', ['$scope', 'UserRegist', function($scope, UserRegist){
       $scope.regist = {
-        'username': '',
-        'password': '',
-        'password_confirm': '',
-        'age': 20,
-        'gender': '여',
+
       }
 
       $scope.userRegist = function(){

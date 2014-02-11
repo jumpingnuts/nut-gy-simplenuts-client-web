@@ -6,6 +6,7 @@ require.config({
     angularRoute: '../bower_components/angular-route/angular-route',
     angularResource: '../bower_components/angular-resource/angular-resource',
     angularSanitize: '../bower_components/angular-sanitize/angular-sanitize',
+    angularCookies: '../bower_components/angular-cookies/angular-cookies',
     angularMD5: '../bower_components/angular-md5/angular-md5',
     angularBootstrap: '../bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
     text: '../bower_components/requirejs-text/text',
@@ -21,6 +22,7 @@ require.config({
     'angularRoute': { deps:['angular'] },
     'angularResource': { deps:['angular'] },
     'angularSanitize': { deps:['angular'] },
+    'angularCookies': { deps:['angular'] },
     'angularMD5': { deps:['angular'] },
     'angularBootstrap': { deps:['angular'] }
   },
@@ -37,7 +39,6 @@ require([
   'jquery',
   'app',
   'angularRoute',
-  'angularResource',
   'angularSanitize',
   'angularMD5',
   'angularBootstrap'

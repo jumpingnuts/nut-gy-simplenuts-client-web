@@ -71,7 +71,7 @@ define([
       });
     
     //공통 컨트롤러 설정 - 모든 컨트롤러에서 공통적으로 사용하는 부분들 선언
-    app.controller('CommonController', ['$scope', '$location', function($scope, $location) {
+    app.controller('CommonController', ['$rootScope', '$scope', '$location', function($rootScope, $scope, $location) {
       var w = window.innerWidth || document.documentElement.clientWidth;
       $scope.webInfo = {
         'title': '심심풀이 테스트',
@@ -79,6 +79,14 @@ define([
         'company': 'Jumping Nuts Inc.',
         'establishmentYear': '2013',
       };
+      
+      $rootScope.apiInfo = {
+//        'baseUrl': 'http://api.jumpingnuts.com',
+        'baseUrl': 'http://dev.jumpingnuts.com:9000',
+        'clientId': '0441c0011f37fec037843fcfe314366f',
+        'responseType': 'token',
+        'openType': 'iframe'//iframe, opener
+      }
       
       $scope.$on('$routeChangeStart', function(){
         $scope.webInfo.currentUrl=$location.absUrl();

@@ -1,9 +1,9 @@
-define(['angular'], function (angular) {
+define(['angular',  'angularResource', 'angularCookies'], function (angular) {
   'use strict';
   
-  angular.module('mainServices', [ 'ngResource' ])
-    .factory('Simnut', [ '$resource', function($resource) {
-        return $resource('http://dev.jumpingnuts.com:9000/api/kakaoapp/app/:id');
+  angular.module('mainServices', [ 'ngResource', 'ngCookies' ])
+    .factory('Simnut', [ '$rootScope', '$resource', function($rootScope, $resource) {
+        return $resource($rootScope.apiInfo.baseUrl+'/api/kakaoapp/app/:id');
 //        return $resource('/dummy/app.json');
     }])
     .factory('MultiSimnutLoader', [ 'Simnut', '$q', function(Simnut, $q) {
@@ -69,8 +69,8 @@ define(['angular'], function (angular) {
       };
     }])
     
-    .factory('Like', [ '$resource', function($resource) {
-        return $resource('http://dev.jumpingnuts.com:9000/api/kakaoapp/like/:like_id');
+    .factory('Like', [ '$rootScope', '$resource', function($rootScope, $resource) {
+        return $resource($rootScope.apiInfo.baseUrl+'/api/kakaoapp/like/:like_id');
     }])
     .factory('LikeView', [ 'Like', '$q', function(Like, $q) {
       return function(simnutId, userId) {
