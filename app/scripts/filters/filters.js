@@ -4,7 +4,7 @@ define(['angular'], function (angular) {
   angular.module('filters', [])
     .filter('orderObjectBy', function(){
       return function(input, attribute) {
-        if (!angular.isObject(input)) return input;
+        if (!angular.isObject(input)) { return input; }
       
         var array = [];
         for(var objectKey in input) {
@@ -19,8 +19,8 @@ define(['angular'], function (angular) {
         });
 
         return array;
-      }
+      };
     });
-})
+});
 
 

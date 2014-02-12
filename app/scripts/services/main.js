@@ -1,10 +1,9 @@
-define(['angular',  'angularResource'], function (angular) {
+define(['angular', 'angularResource', 'kakao'], function (angular, kakao) {
   'use strict';
   
   angular.module('mainServices', [ 'ngResource' ])
     .factory('Simnut', [ '$rootScope', '$resource', function($rootScope, $resource) {
-        return $resource($rootScope.apiInfo.baseUrl+'/api/kakaoapp/app/:id');
-//        return $resource('/dummy/app.json');
+      return $resource($rootScope.apiInfo.baseUrl+'/api/kakaoapp/app/:id');
     }])
     .factory('MultiSimnutLoader', [ 'Simnut', '$q', function(Simnut, $q) {
       return function(page, type, userId) {
@@ -14,11 +13,20 @@ define(['angular',  'angularResource'], function (angular) {
         var order = null;
 
         switch(type) {
-          case 'trends' : order = 'updated desc'; break;
-          case 'best' : order = 'count_likes desc, updated desc'; break;
-          case 'new' : order = 'created desc'; break;
-          case 'mine' : order = 'created desc'; break;
-          default: order = 'created desc';
+          case 'trends':
+            order = 'updated desc';
+            break;
+          case 'best':
+            order = 'count_likes desc, updated desc';
+            break;
+          case 'new':
+            order = 'created desc';
+            break;
+          case 'mine':
+            order = 'created desc';
+            break;
+          default:
+            order = 'created desc';
         }
         
         var param = {
@@ -27,7 +35,7 @@ define(['angular',  'angularResource'], function (angular) {
           'order':order
         };
 
-        if(type=='mine' && userId) {
+        if(type==='mine' && userId) {
           param.user_id = userId;
         }
         
@@ -70,7 +78,7 @@ define(['angular',  'angularResource'], function (angular) {
     }])
     
     .factory('Like', [ '$rootScope', '$resource', function($rootScope, $resource) {
-        return $resource($rootScope.apiInfo.baseUrl+'/api/kakaoapp/like/:like_id');
+      return $resource($rootScope.apiInfo.baseUrl+'/api/kakaoapp/like/:like_id');
     }])
     .factory('LikeView', [ 'Like', '$q', function(Like, $q) {
       return function(simnutId, userId) {
@@ -109,27 +117,27 @@ define(['angular',  'angularResource'], function (angular) {
     .factory('ShareFunc', function(){
       return {
         kakaoTalk: function(data){
-          kakao.link("talk").send({
-              msg : data.title+'\n\n'+data.content+'\n\n'+data.currentUrl,
-              url : data.marketUrl,
-              appid : data.appId,
-              appver : "1.0",
-              appname : "심심풀이 너츠",
-              type : "link"
+          kakao.link('talk').send({
+            msg : data.title+'\n\n'+data.content+'\n\n'+data.currentUrl,
+            url : data.marketUrl,
+            appid : data.appId,
+            appver : '1.0',
+            appname : '심심풀이 너츠',
+            type : 'link'
           });
         },
         
         kakaoStory: function(data){
-          kakao.link("story").send({   
-            post : '[심심풀이 너츠] '+data.title+'\n\n'+content+'\n\n'+data.currentUrl+'\n\n안드로이드 : '+data.marketUrl,
+          kakao.link('story').send({
+            post : '[심심풀이 너츠] '+data.title+'\n\n'+data.content+'\n\n'+data.currentUrl+'\n\n안드로이드 : '+data.marketUrl,
             appid : data.appId,
-            appver : "1.0",
-            appname : "심심풀이 너츠",
+            appver : '1.0',
+            appname : '심심풀이 너츠',
             urlinfo : JSON.stringify({
-              title: data.title, 
-              desc: data.content.substring(0,80)+'...', 
-              imageurl:[data.currentImage], 
-              type:"app"
+              title: data.title,
+              desc: data.content.substring(0,80)+'...',
+              imageurl:[data.currentImage],
+              type:'app'
             })
           });
         },
@@ -137,7 +145,7 @@ define(['angular',  'angularResource'], function (angular) {
         twitter: function(data){
           window.location.href = 'https://twitter.com/intent/tweet?'+
             'original_referer='+encodeURIComponent(data.currentUrl)+
-            '&text='+encodeURIComponent('[심심풀이 너츠] '+data.title+'\n'+data.content.replace(/\n/gi, " ").substring(0,60))+'\n\n'+
+            '&text='+encodeURIComponent('[심심풀이 너츠] '+data.title+'\n'+data.content.replace(/\n/gi, ' ').substring(0,60))+'\n\n'+
             '&url='+encodeURIComponent(data.marketUrl);
         },
   

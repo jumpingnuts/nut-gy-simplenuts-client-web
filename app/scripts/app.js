@@ -83,7 +83,7 @@ define([
     app.controller('CommonController', ['$rootScope', '$scope', '$location', function($rootScope, $scope, $location) {
       var w = window.innerWidth || document.documentElement.clientWidth;
       $scope.webInfo = {
-        'title': '심심풀이 테스트',
+        'title': '심심풀이 너츠',
         'mailto': 'mailto:nuts@jumpingnuts.com',
         'company': 'Jumping Nuts Inc.',
         'establishmentYear': '2013',
@@ -146,7 +146,7 @@ define([
           $scope.userInfo.connection.push('kakao');
           $scope.userConnection = {'kakao' : JSON.parse(window.android.getUserInfo())};
 
-          NativeFunc.notiRegist($scope.userConnection.kakao.username);
+          NativeFunc.notiRegist($scope.userConnection.kakao.username, $scope.marketInfo.url);
           if($scope.userConnection.kakao.properties.uid && $scope.userConnection.kakao.properties.key) {
             new UserConnectionLogin(
               $scope.userConnection.kakao.properties.uid,

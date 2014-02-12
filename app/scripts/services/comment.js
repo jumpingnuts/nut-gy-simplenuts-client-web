@@ -3,19 +3,25 @@ define(['angular'], function (angular) {
   
   angular.module('commentServices', [ 'ngResource' ])
     .factory('Comment', [ '$rootScope', '$resource', function($rootScope, $resource) {
-        return $resource($rootScope.apiInfo.baseUrl+'/api/comment');
+      return $resource($rootScope.apiInfo.baseUrl+'/api/comment');
     }])
     .factory('CommentLoader', [ 'Comment', '$q', function(Comment, $q) {
       return function(page, key, type) {
         if(!key) { return false; }
         page = page || 1;
+        type = type || 'new';
         var limit = 200;
         var order = null;
-        var type = type || 'new';
+        
         switch(type) {
-          case 'new' : order = 'created desc'; break;
-          case 'best' : order = 'created desc'; break;
-          default: order = 'created desc';
+          case 'new':
+            order = 'created desc';
+            break;
+          case 'best':
+            order = 'created desc';
+            break;
+          default:
+            order = 'created desc';
         }
         
         var param = {
@@ -27,9 +33,9 @@ define(['angular'], function (angular) {
         
         var delay = $q.defer();
         Comment.query(param, function(simnuts) {
-            delay.resolve(simnuts);
+          delay.resolve(simnuts);
         }, function(res) {
-            delay.reject(res);
+          delay.reject(res);
         });
         return delay.promise;
       };
@@ -46,11 +52,11 @@ define(['angular'], function (angular) {
         
         var delay = $q.defer();
         Comment.save(param, function(res) {
-            delay.resolve(res);
+          delay.resolve(res);
         }, function(res) {
-            delay.reject(res);
+          delay.reject(res);
         });
         return delay.promise;
       };
-    }])
+    }]);
 });

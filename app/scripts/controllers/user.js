@@ -1,11 +1,11 @@
-define(['angular', 'services/user', 'services/native'], function (angular) {
+define(['angular', 'jquery', 'services/user', 'services/native'], function (angular, $) {
   'use strict';
 
   angular.module('userCtrls', ['userServices', 'nativeServices'])
     .controller('UserCtrl', [
       '$scope',
       '$routeParams',
-      'User',
+      'Auth',
       'UserLogin',
       'UserConnection',
       function ($scope, $routeParams, Auth, UserLogin, UserConnection) {
@@ -16,26 +16,16 @@ define(['angular', 'services/user', 'services/native'], function (angular) {
         
         $scope.sessLogin = function(){
           if(window.android) {
-            window.android.login("$('#nativeCallback').scope().loginCallback");
+            window.android.login('$("#nativeCallback").scope().loginCallback');
           } else {
-new Auth.save({ 'email': 'test@test.com', 'password': 'test' }, function(res, code) {
-  $scope.userInfo.isLogin = true;
-  $scope.userInfo.id = res.id;
-  $scope.userInfo.email = res.email;
-  $scope.userInfo.is_confirmed = res.is_confirmed;
-  $scope.userInfo.updated = res.updated;
-
-});
-          
             new Auth.get({}, function(res) {
-              $scope.userInfo.isLogin = true;
-              $scope.userInfo.id = res.id;
-              $scope.userInfo.email = res.email;
-              $scope.userInfo.is_confirmed = res.is_confirmed;
-              $scope.userInfo.updated = res.updated;
-            }, function(code){
-              console.log('sessLogin code:');
-              console.log(code);
+              if(res.id) {
+                $scope.userInfo.isLogin = true;
+                $scope.userInfo.id = res.id;
+                $scope.userInfo.email = res.email;
+                $scope.userInfo.is_confirmed = res.is_confirmed;
+                $scope.userInfo.updated = res.updated;
+              }
             });
           }
         };
@@ -54,8 +44,6 @@ new Auth.save({ 'email': 'test@test.com', 'password': 'test' }, function(res, co
         
         $scope.loginAction = function(){
           new UserLogin($scope.userInfo.username, $scope.userInfo.password).then(function(res, code){
-console.log(res);
-console.log(code);
             $scope.userInfo.password = '';
             if(res.id) {
               $scope.userInfo.isLogin = true;
@@ -68,15 +56,18 @@ console.log(code);
                 $scope.setKakaoConn();
               }
               $scope.move( $routeParams.redirectUrl || '/list/trends' );
-            } else {
-              $scope.alerts.push({ type: 'danger', msg: '아이디 또는 비밀번호가 틀립니다.' });
             }
             
+          }, function(res){
+            if(res.status === 401) {
+              $scope.alerts.push({ type: 'danger', msg: '아이디 또는 비밀번호가 틀립니다.' });
+            }
           });
         };
         
         $scope.setKakaoConn = function(){
           new UserConnection.get({'id':$scope.userInfo.id}, function(res, code){
+//console.log(code)
             if(code === 200) {
               window.android.setUserInfo('uid', $scope.userInfo.id);
               window.android.setUserInfo('key', res[0].key);
@@ -85,13 +76,12 @@ console.log(code);
                 'uid':$scope.userInfo.id,
                 'connectionProvider':'kakao',
                 'connectionProfile':window.android.getUserInfo()
-                }, function(res){
-                  new UserConnection.get({'id':$scope.userInfo.id}, function(res, code){
-                    window.android.setUserInfo('uid', $scope.userInfo.id);
-                    window.android.setUserInfo('key', res[0].key);
-                  });
-                }
-              );
+              }, function(){
+                new UserConnection.get({'id':$scope.userInfo.id}, function(res){
+                  window.android.setUserInfo('uid', $scope.userInfo.id);
+                  window.android.setUserInfo('key', res[0].key);
+                });
+              });
             }
           });
         };
@@ -101,27 +91,30 @@ console.log(code);
         };
       }
     ])
-    .controller('LoginCtrl', ['$scope', '$window', function($scope, $window){
+    .controller('LoginCtrl', ['$scope', function($scope, $window){
       if($scope.userInfo.id) {
-        $window.history.back();
+        $scope.move( '/list/trends' );
       }
     }])
     .controller('RegistCtrl', ['$scope', 'UserRegist', function($scope, UserRegist){
+      if($scope.userInfo.id) {
+        $scope.move( '/list/trends' );
+      }
       $scope.regist = {
 
-      }
+      };
 
       $scope.userRegist = function(){
         new UserRegist($scope.regist).then(function(res){
-          if(res.insertId) {
-            $scope.userInfo.username = $scope.regist.username;
+          if(res.id) {
+            $scope.userInfo.email = $scope.regist.email;
             $scope.userInfo.password = $scope.regist.password;
             $scope.loginAction();
           }
         }, function(res){
           $scope.alerts.push({ type: 'danger', msg: res.data.message });
         });
-      }
+      };
     }]);
 
 });

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['angular'], function (angular) {
+define(['angular', 'jquery'], function (angular, $) {
   var INTERVAL_DELAY = 1000;
   
   angular.module('directives', [])
@@ -13,29 +13,28 @@ define(['angular'], function (angular) {
         
         var interval,
         handler,
-        el = element[0],
         scrollEvent = 'scroll';
         
         var bindScroll = function() {
-            handler = function() {
-              if ($doc.scrollTop() > ($doc.height()*0.9) - $win.height()) {
-                scrollTrigger();
-              }
-            };
+          handler = function() {
+            if ($doc.scrollTop() > ($doc.height()*0.9) - $win.height()) {
+              scrollTrigger();
+            }
+          };
 
-            $win.bind(scrollEvent, handler);
+          $win.bind(scrollEvent, handler);
         };
 
-        var startInterval = function(event) {
-            interval = $window.setInterval(function() {
-              $window.clearInterval(interval);
-              bindScroll();
-            }, INTERVAL_DELAY);
+        var startInterval = function() {
+          interval = $window.setInterval(function() {
+            $window.clearInterval(interval);
+            bindScroll();
+          }, INTERVAL_DELAY);
         };
 
         var unbindScroll = function() {
-            // be nice to others, don't unbind their scroll handlers
-            $win.unbind(scrollEvent);
+          // be nice to others, don't unbind their scroll handlers
+          $win.unbind(scrollEvent);
         };
 
         var scrollTrigger = function() {
@@ -46,8 +45,8 @@ define(['angular'], function (angular) {
 
         bindScroll();
       };
-  }]);
-})
+    }]);
+});
 
 
 /*

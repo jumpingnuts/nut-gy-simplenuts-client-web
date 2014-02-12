@@ -8,8 +8,8 @@ define(['angular', 'angularResource'], function (angular) {
     .factory('UserLogin', [ 'Auth', '$route', '$q', function(Auth, $route, $q) {
       return function(id, pw) {
         var delay = $q.defer();
-        new Auth.login({ 'email': id, 'password': pw }, function(res) {
-          delay.resolve(res);
+        new Auth.login({ 'email': id, 'password': pw }, function(res, code) {
+          delay.resolve(res, code);
         }, function(res) {
           delay.reject(res);
         });
@@ -18,7 +18,7 @@ define(['angular', 'angularResource'], function (angular) {
     }])
     
     .factory('UserReg', [ '$rootScope', '$resource', function($rootScope, $resource) {
-        return $resource($rootScope.apiInfo.baseUrl+'/user');
+      return $resource($rootScope.apiInfo.baseUrl+'/user');
     }])
     .factory('UserRegist', [ 'UserReg', '$route', '$q', function(UserReg, $route, $q) {
       return function(save) {
@@ -33,7 +33,7 @@ define(['angular', 'angularResource'], function (angular) {
     }])
     
     .factory('User', [ '$rootScope', '$resource', function($rootScope, $resource) {
-        return $resource($rootScope.apiInfo.baseUrl+'/api/user');
+      return $resource($rootScope.apiInfo.baseUrl+'/api/user');
     }])
     .factory('UserConnectionLogin', [ 'User', '$route', '$q', function(User, $route, $q) {
       return function(uid, type, key) {
@@ -54,6 +54,6 @@ define(['angular', 'angularResource'], function (angular) {
     }])
     
     .factory('UserConnection', [ '$rootScope', '$resource', function($rootScope, $resource) {
-        return $resource($rootScope.apiInfo.baseUrl+'/api/userConnection/:id');
-    }])
+      return $resource($rootScope.apiInfo.baseUrl+'/api/userConnection/:id');
+    }]);
 });

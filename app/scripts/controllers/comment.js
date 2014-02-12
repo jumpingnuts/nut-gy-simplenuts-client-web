@@ -19,6 +19,7 @@ define(['angular', 'services/comment'], function (angular) {
       $scope.commentWrite = function(){
         if(!$scope.isLogin()) {
           $scope.moveLogin();
+          return false;
         }
         new CommentWrite($scope.webInfo.currentUrl, $scope.comment.content, $scope.userInfo.id).then(function(){
           $scope.commentLoad();

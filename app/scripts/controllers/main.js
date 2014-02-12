@@ -1,12 +1,13 @@
 define([
   'angular',
+  'jquery',
   'angularMD5',
   'services/main',
   'services/native',
   'controllers/comment',
   'kakao'
 ],
-function (angular) {
+function (angular, $) {
   'use strict';
 
   angular.module('mainCtrls', ['ngSanitize', 'ngMd5', 'mainServices', 'nativeServices', 'commentCtrls'])
@@ -31,6 +32,7 @@ function (angular) {
   
         if($scope.type==='mine' && !$scope.isLogin()) {
           $scope.moveLogin();
+          return false;
         }
         
         $scope.listLoad = function(){
@@ -87,10 +89,10 @@ function (angular) {
             result = result.replace(new RegExp('{변수'+(parseInt(i)+1)+'}','gi'), '<b>'+randomString+'</b>');
           }
           $scope.result = result;
-        }
+        };
   
         if($scope.isLogin()) {
-          LikeView($scope.simnut.id, $scope.userInfo.id).then(function(res){
+          new LikeView($scope.simnut.id, $scope.userInfo.id).then(function(res){
             if(res) {
               $scope.like.light = true;
               $scope.like.id = res.id;
@@ -101,34 +103,38 @@ function (angular) {
         }
         
         $scope.likeToggle = function(){
-          if(!$scope.isLogin()) { 
+          if(!$scope.isLogin()) {
             $scope.moveLogin();
-          } 
+            return false;
+          }
   
           if($scope.like.id) {
-            LikeOff($scope.simnut.id, $scope.userInfo.id, $scope.like.id).then(function(res){
+            new LikeOff($scope.simnut.id, $scope.userInfo.id, $scope.like.id).then(function(res){
               if(res) {
                 $scope.like.light = false;
                 $scope.like.id = null;
               }
             });
           } else {
-            LikeOn($scope.simnut.id, $scope.userInfo.id).then(function(res){
+            new LikeOn($scope.simnut.id, $scope.userInfo.id).then(function(res){
               if(res) {
                 $scope.like.light = true;
                 $scope.like.id = res.insertId;
-                var data = {
-                  'content': $(($scope.result || $scope.simnut.description).replace(/\<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
-                  'title': $scope.simnut.title,
-                  'marketUrl': $scope.marketInfo.Url
-                };
-                var storyPostText = ShareFunc.postText(data);
-                NativeFunc.uploadStroryPost(storyPostText, null, '앱으로 가기', $scope.webInfo.currentPath, '');
+                if(window.android){
+                  var data = {
+                    'content': $(($scope.result || $scope.simnut.description).replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+                    'title': $scope.simnut.title,
+                    'marketUrl': $scope.marketInfo.Url
+                  };
+                  var storyPostText = ShareFunc.postText(data);
+                  NativeFunc.uploadStroryPost(storyPostText, null, '앱으로 가기', $scope.webInfo.currentPath, '');
+                }
               }
             });
           }
         };
-    }])
+      }
+    ])
     .controller('WriteCtrl', ['$scope', 'SimnutSave', function($scope, SimnutSave){
       $scope.write = {
         'user_id': $scope.userInfo.id,
@@ -137,18 +143,18 @@ function (angular) {
         'content': '',
         'variables': [{'value':''}],
         'is_anonymous':false
-      }
+      };
       
       $scope.addVariables = function(){
         $scope.write.variables.push({'value':''});
       };
       
       $scope.simnutSave = function(){
-        SimnutSave($scope.write).then(function(res){
+        new SimnutSave($scope.write).then(function(res){
           if(res.insertId) {
             $scope.move('/simnut/'+res.insertId);
           } else {
-            var tmp = []
+            var tmp = [];
             for(var i in $scope.write.variables) {
               tmp.push({'value':$scope.write.variables[i]});
             }
@@ -163,7 +169,7 @@ function (angular) {
 
       $scope.shareLink = function(type){
         var data = {
-          'content': $(($scope.result || $scope.simnut.description).replace(/\<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+          'content': $(($scope.result || $scope.simnut.description).replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
           'currentImage': 'https://lh5.ggpht.com/o0HQmfQGkCUUiB2iFSYbjIgFpCCnwEKNi-Abpa3Ui_OGrF1WrDfqiYVJDb_5evpwCaIl=w300-rw',
           'currentUrl': $scope.webInfo.currentUrl,
           'title': $scope.simnut.title,
@@ -173,5 +179,4 @@ function (angular) {
         ShareFunc[type](data);
       };
     }]);
-  }
-);
+});
