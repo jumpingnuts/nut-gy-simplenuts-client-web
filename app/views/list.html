@@ -3,7 +3,7 @@
     <h3>{{nav.items[nav.active].name}}</h3>
     <hr />
   </div>
-  <div ng-repeat="simnut in simnuts" class="col-lg-4" ng-click="move('/app/'+simnut.id);">
+  <div ng-repeat="simnut in simnuts" class="col-lg-4" ng-click="move('simnut/'+simnut.id);">
     <h4>
       <a ng-href="#/simnut/{{simnut.id}}">
         {{simnut.title}}

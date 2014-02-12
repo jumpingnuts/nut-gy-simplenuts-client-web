@@ -75,6 +75,7 @@ define([
       }
     )
     .config(function($httpProvider){
+      $httpProvider.defaults.useXDomain = true;
       $httpProvider.defaults.withCredentials = true;
     });
 //    app.config();
@@ -90,8 +91,8 @@ define([
       };
       
       $rootScope.apiInfo = {
-//        'baseUrl': 'http://api.jumpingnuts.com',
-        'baseUrl': 'http://dev.jumpingnuts.com:9000',
+        'baseUrl': 'http://api.jumpingnuts.com',  //상용
+//        'baseUrl': 'http://dev.jumpingnuts.com:9010', //개발
         'clientId': '0441c0011f37fec037843fcfe314366f',
         'responseType': 'token',
         'openType': 'iframe'//iframe, opener
@@ -142,19 +143,19 @@ define([
     
     app.controller('NativeCtrl', ['$scope', 'NativeFunc', 'UserConnectionLogin', function($scope, NativeFunc, UserConnectionLogin){
       $scope.loginCallback = function(res){
-        if(JSON.parse(res).response === 200) {
+        if(JSON.parse(res).response === '200') {
           $scope.userInfo.connection.push('kakao');
-          $scope.userConnection = {'kakao' : JSON.parse(window.android.getUserInfo())};
-
+          $scope.userConnection.kakao = JSON.parse(window.android.getUserInfo());
           NativeFunc.notiRegist($scope.userConnection.kakao.username, $scope.marketInfo.url);
+
           if($scope.userConnection.kakao.properties.uid && $scope.userConnection.kakao.properties.key) {
             new UserConnectionLogin(
               $scope.userConnection.kakao.properties.uid,
               'kakao',
               $scope.userConnection.kakao.properties.key
-            ).then(function(res, code){
-              if(code === 200) {
-                $scope.userInfo = res;
+            ).then(function(res){
+              if(res.id) {
+                $scope.setUserInfo(res);
               }
             });
           }

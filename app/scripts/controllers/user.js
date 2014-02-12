@@ -13,6 +13,13 @@ define(['angular', 'jquery', 'services/user', 'services/native'], function (angu
           isLogin:false,
           connection: []
         };
+        $scope.userConnection = {};
+        
+        $scope.setUserInfo = function(res) {
+          $scope.userInfo.isLogin = true;
+          $scope.userInfo.id = res.id;
+          $scope.userInfo.email = res.email;
+        };
         
         $scope.sessLogin = function(){
           if(window.android) {
@@ -20,11 +27,7 @@ define(['angular', 'jquery', 'services/user', 'services/native'], function (angu
           } else {
             new Auth.get({}, function(res) {
               if(res.id) {
-                $scope.userInfo.isLogin = true;
-                $scope.userInfo.id = res.id;
-                $scope.userInfo.email = res.email;
-                $scope.userInfo.is_confirmed = res.is_confirmed;
-                $scope.userInfo.updated = res.updated;
+                $scope.setUserInfo(res);
               }
             });
           }
@@ -43,14 +46,10 @@ define(['angular', 'jquery', 'services/user', 'services/native'], function (angu
         };
         
         $scope.loginAction = function(){
-          new UserLogin($scope.userInfo.email, $scope.userInfo.password).then(function(res, code){
+          new UserLogin($scope.userInfo.email, $scope.userInfo.password).then(function(res){
             $scope.userInfo.password = '';
             if(res.id) {
-              $scope.userInfo.isLogin = true;
-              $scope.userInfo.id = res.id;
-              $scope.userInfo.email = res.email;
-              $scope.userInfo.is_confirmed = res.is_confirmed;
-              $scope.userInfo.updated = res.updated;
+              $scope.setUserInfo(res);
 
               if($.inArray('kakao', $scope.userInfo.connection) > -1) {
                 $scope.setKakaoConn();
@@ -66,20 +65,18 @@ define(['angular', 'jquery', 'services/user', 'services/native'], function (angu
         };
         
         $scope.setKakaoConn = function(){
-          new UserConnection.get({'id':$scope.userInfo.id}, function(res, code){
-//console.log(code)
-            if(code === 200) {
+          new UserConnection.get({'id':$scope.userInfo.id}, function(res){
+            if(res.key) {
               window.android.setUserInfo('uid', $scope.userInfo.id);
-              window.android.setUserInfo('key', res[0].key);
+              window.android.setUserInfo('key', res.key);
             } else {
               new UserConnection.save({
-                'uid':$scope.userInfo.id,
                 'connectionProvider':'kakao',
                 'connectionProfile':window.android.getUserInfo()
               }, function(){
                 new UserConnection.get({'id':$scope.userInfo.id}, function(res){
                   window.android.setUserInfo('uid', $scope.userInfo.id);
-                  window.android.setUserInfo('key', res[0].key);
+                  window.android.setUserInfo('key', res.key);
                 });
               });
             }
@@ -91,7 +88,7 @@ define(['angular', 'jquery', 'services/user', 'services/native'], function (angu
         };
       }
     ])
-    .controller('LoginCtrl', ['$scope', function($scope, $window){
+    .controller('LoginCtrl', ['$scope', function($scope){
       if($scope.userInfo.id) {
         $scope.move( '/list/trends' );
       }

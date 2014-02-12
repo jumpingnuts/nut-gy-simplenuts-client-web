@@ -2,6 +2,9 @@ define(['angular', 'angularResource'], function (angular) {
   'use strict';
   
   angular.module('userServices', [ 'ngResource'])
+    .factory('User', [ '$rootScope', '$resource', function($rootScope, $resource) {
+      return $resource($rootScope.apiInfo.baseUrl+'/api/user');
+    }])
     .factory('Auth', [ '$rootScope', '$resource', function($rootScope, $resource) {
       return $resource($rootScope.apiInfo.baseUrl+'/auth/user', null, {'login':{method:'POST'}});
     }])
@@ -32,20 +35,17 @@ define(['angular', 'angularResource'], function (angular) {
       };
     }])
     
-    .factory('User', [ '$rootScope', '$resource', function($rootScope, $resource) {
-      return $resource($rootScope.apiInfo.baseUrl+'/api/user');
-    }])
-    .factory('UserConnectionLogin', [ 'User', '$route', '$q', function(User, $route, $q) {
-      return function(uid, type, key) {
+    .factory('UserConnectionLogin', [ 'Auth', '$route', '$q', function(Auth, $route, $q) {
+      return function(email, type, key) {
         var delay = $q.defer();
         var param = {
-          'uid':uid,
-          'connectionProvider':type,
-          'connectionKey':key
+          'email': email,
+          'connectionProvider': type,
+          'connectionKey': key
         };
-        
-        new User.login(param, function(res) {
-          delay.resolve(res);
+
+        new Auth.login(param, function(res, code) {
+          delay.resolve(res, code);
         }, function(res) {
           delay.reject(res);
         });

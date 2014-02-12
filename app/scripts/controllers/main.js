@@ -89,11 +89,26 @@ function (angular, $) {
             result = result.replace(new RegExp('{변수'+(parseInt(i)+1)+'}','gi'), '<b>'+randomString+'</b>');
           }
           $scope.result = result;
+          
+          if(window.android){
+            var data = {
+              'title': $scope.simnut.title,
+              'marketUrl': $scope.marketInfo.url,
+              'type': 'image',
+              'content': $(($scope.result || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+              'contnetPostfix': $scope.result ? ' 실행 결과입니다.' : ' 앱을 좋아합니다.',
+              'name': $scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name
+            };
+            
+            var image = $scope.userConnection.kakao ? $scope.userConnection.kakao.thumbnail : null;
+            data.storyPostText = ShareFunc.postText(data);
+            NativeFunc.uploadStroryPost(data, image, '앱으로 가기', $scope.webInfo.currentPath, '');
+          }
         };
   
         if($scope.isLogin()) {
           new LikeView($scope.simnut.id, $scope.userInfo.id).then(function(res){
-            if(res) {
+            if(res.id) {
               $scope.like.light = true;
               $scope.like.id = res.id;
             }
@@ -122,12 +137,10 @@ function (angular, $) {
                 $scope.like.id = res.insertId;
                 if(window.android){
                   var data = {
-                    'content': $(($scope.result || $scope.simnut.description).replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
-                    'title': $scope.simnut.title,
-                    'marketUrl': $scope.marketInfo.Url
+                    'type': 'text',
+                    'storyPostText': ($scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name)+'님이 ['+$scope.simnut.title+'] 앱을 좋아 합니다.\n\n안드로이드 다운로드\n'+$scope.marketInfo.url
                   };
-                  var storyPostText = ShareFunc.postText(data);
-                  NativeFunc.uploadStroryPost(storyPostText, null, '앱으로 가기', $scope.webInfo.currentPath, '');
+                  NativeFunc.uploadStroryPost(data, null, '앱으로 가기', $scope.webInfo.currentPath, '');
                 }
               }
             });
@@ -169,11 +182,11 @@ function (angular, $) {
 
       $scope.shareLink = function(type){
         var data = {
-          'content': $(($scope.result || $scope.simnut.description).replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+          'content': $(($scope.result || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
           'currentImage': 'https://lh5.ggpht.com/o0HQmfQGkCUUiB2iFSYbjIgFpCCnwEKNi-Abpa3Ui_OGrF1WrDfqiYVJDb_5evpwCaIl=w300-rw',
           'currentUrl': $scope.webInfo.currentUrl,
           'title': $scope.simnut.title,
-          'marketUrl': $scope.marketInfo.Url,
+          'marketUrl': $scope.marketInfo.url,
           'appId': $scope.marketInfo.appId
         };
         ShareFunc[type](data);
