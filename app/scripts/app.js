@@ -132,8 +132,7 @@ define([
       };
       
       $scope.adsenseLoad = function(){
-//chk : 애드센스 403오류      
-//        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
       };
       
       $scope.move = function ( url ) {
