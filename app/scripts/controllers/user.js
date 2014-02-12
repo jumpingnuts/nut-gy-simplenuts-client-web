@@ -43,7 +43,7 @@ define(['angular', 'jquery', 'services/user', 'services/native'], function (angu
         };
         
         $scope.loginAction = function(){
-          new UserLogin($scope.userInfo.username, $scope.userInfo.password).then(function(res, code){
+          new UserLogin($scope.userInfo.email, $scope.userInfo.password).then(function(res, code){
             $scope.userInfo.password = '';
             if(res.id) {
               $scope.userInfo.isLogin = true;
