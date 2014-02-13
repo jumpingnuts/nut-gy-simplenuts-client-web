@@ -24,7 +24,8 @@ function (angular, $) {
       '$routeParams',
       '$window',
       'MultiSimnutLoader',
-      function($scope, $routeParams, $window, MultiSimnutLoader) {
+      'Simnut',
+      function($scope, $routeParams, $window, MultiSimnutLoader, Simnut) {
         $scope.simnuts = [];
         $scope.isLoad = false;
         $scope.page = 1;
@@ -46,8 +47,22 @@ function (angular, $) {
             }
           });
         };
-        
         $scope.listLoad();
+        
+        $scope.deleteSimnut = function($event){
+          $scope.eventStop($event);
+          var simnutId = $($event.currentTarget).attr('data-id');
+          new Simnut.remove({ id:simnutId }, function(res){
+            if(res.affectedRows > 0) {
+              for(var i in $scope.simnuts) {
+                if($scope.simnuts[i].id === parseInt(simnutId)) {
+                  $scope.simnuts.pop(i);
+                  break;
+                }
+              }
+            }
+          });
+        };
       }
     ])
     

@@ -138,6 +138,11 @@ define([
       $scope.move = function ( url ) {
         $location.url( url );
       };
+      
+      $scope.eventStop = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+      };
     }]);
     
     app.controller('NativeCtrl', ['$scope', 'NativeFunc', 'UserConnectionLogin', function($scope, NativeFunc, UserConnectionLogin){
