@@ -82,7 +82,6 @@ define([
     
     //공통 컨트롤러 설정 - 모든 컨트롤러에서 공통적으로 사용하는 부분들 선언
     app.controller('CommonController', ['$rootScope', '$scope', '$location', function($rootScope, $scope, $location) {
-      var w = window.innerWidth || document.documentElement.clientWidth;
       $scope.webInfo = {
         'title': '심심풀이 너츠',
         'mailto': 'mailto:nuts@jumpingnuts.com',
@@ -123,12 +122,6 @@ define([
         'appId': 'com.jumpingnuts.simsimNuts',
         'url' : 'https://play.google.com/store/apps/details?id=com.jumpingnuts.simsimNuts',
         'urlCustom' : 'market://details?id=com.jumpingnuts.simsimNuts'
-      };
-      
-      $scope.adInfo = {
-        'width' : w<468 ? '320' : (w<728 ? '468' : '728'),
-        'height' : w<468 ? '100' : (w<728 ? '60' : '90'),
-        'slot' : w<468 ? '2879098937' : (w<728 ? '6250720936' : '7386363738')
       };
       
       $scope.move = function ( url ) {

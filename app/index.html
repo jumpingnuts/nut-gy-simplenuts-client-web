@@ -27,11 +27,26 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
+  
     <!-- Add your site or application content here -->
     <div class="container">
       <div ng-include="'views/navbar.html'"></div>
-      <div ng-include="'views/ad.html'"></div>
+      <div class="text-center">
+        <script>
+        var w = window.innerWidth || document.documentElement.clientWidth;
+        var adInfo = {
+          'width' : w<468 ? '320' : (w<728 ? '468' : '728'),
+          'height' : w<468 ? '100' : (w<728 ? '60' : '90'),
+          'slot' : w<468 ? '2879098937' : (w<728 ? '6250720936' : '7386363738')
+        };
+        window.google_ad_client = "ca-pub-4734613993143962";
+        window.google_ad_slot = adInfo.slot;
+        window.google_ad_width = adInfo.width;
+        window.google_ad_height = adInfo.height;
+        
+        </script>
+        <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+      </div>
       <div class="hide" ng-class="{hide:!alerts}">
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
       </div>
@@ -40,16 +55,7 @@
     </div>
     
     <div id="nativeCallback" ng-controller="NativeCtrl"></div>
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
+    
 
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
@@ -60,7 +66,7 @@
     <script src="bower_components/requirejs/require.js"></script>
     <script src="scripts/bootstrap.js"></script>
     <!-- endbuild -->
-    
+
     <!-- daum ad -->
     <div style="text-align:center; position:fixed; width:100%; height:48px; left:0; bottom:0; z-index:9999;">
       <div id="MobileadAreaDiv"></div>
@@ -75,5 +81,21 @@
       };
     </script>
     <script type="text/javascript" src="http://m.adtc.daum.net/js/mobilead.js"></script>
+    
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-XXXXX-X');
+      ga('send', 'pageview');
+    </script>
+    
+    
+    <!-- Google Adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
   </body>
 </html>
