@@ -131,10 +131,6 @@ define([
         'slot' : w<468 ? '2879098937' : (w<728 ? '6250720936' : '7386363738')
       };
       
-      $scope.adsenseLoad = function(){
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      };
-      
       $scope.move = function ( url ) {
         $location.url( url );
       };

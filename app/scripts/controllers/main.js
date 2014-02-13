@@ -51,17 +51,19 @@ function (angular, $) {
         
         $scope.deleteSimnut = function($event){
           $scope.eventStop($event);
-          var simnutId = $($event.currentTarget).attr('data-id');
-          new Simnut.remove({ id:simnutId }, function(res){
-            if(res.affectedRows > 0) {
-              for(var i in $scope.simnuts) {
-                if($scope.simnuts[i].id === parseInt(simnutId)) {
-                  $scope.simnuts.pop(i);
-                  break;
+          if(confirm('삭제 하시겠습니까?')) {
+            var simnutId = $($event.currentTarget).attr('data-id');
+            new Simnut.remove({ id:simnutId }, function(res){
+              if(res.affectedRows > 0) {
+                for(var i in $scope.simnuts) {
+                  if($scope.simnuts[i].id === parseInt(simnutId)) {
+                    $scope.simnuts.pop(i);
+                    break;
+                  }
                 }
               }
-            }
-          });
+            });
+          }
         };
       }
     ])

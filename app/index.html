@@ -31,8 +31,10 @@
     <!-- Add your site or application content here -->
     <div class="container">
       <div ng-include="'views/navbar.html'"></div>
-      <div ng-include="'views/ad.html'" onload="adsenseLoad()"></div>
-      <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+      <div ng-include="'views/ad.html'"></div>
+      <div class="hide" ng-class="{hide:!alerts}">
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+      </div>
       <div ng-view></div>
       <div ng-include="'views/footer.html'"></div>
     </div>
@@ -48,10 +50,6 @@
        ga('create', 'UA-XXXXX-X');
        ga('send', 'pageview');
     </script>
-
-    
-    <!-- Google Adsense -->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
