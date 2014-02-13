@@ -18,7 +18,7 @@ define(['angular'], function (angular) {
                 'type': 'text',
                 'storyPostText': username+'님이 \'심심풀이너츠\'앱을 시작하셨습니다.\n\n안드로이드 다운로드\n'+marketUrl
               };
-              self.uploadStroryPost(data, null, '앱으로 가기', '#/list/trends', '');
+              self.uploadStroryPost(data, null, '앱으로 가기', '/list/trends', '');
             }
           });
         },
@@ -95,7 +95,7 @@ define(['angular'], function (angular) {
             data.storyPostText,
             data.type === 'image' ? JSON.stringify(vars) : img, //img url
             title,
-            href,
+            '#'+href,
             callback //callback $scope 테스트 필요
           );
         }
