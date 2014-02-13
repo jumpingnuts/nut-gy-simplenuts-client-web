@@ -183,7 +183,7 @@ function (angular, $) {
       $scope.shareLink = function(type){
         var data = {
           'content': $(($scope.result || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
-          'currentImage': 'https://lh5.ggpht.com/o0HQmfQGkCUUiB2iFSYbjIgFpCCnwEKNi-Abpa3Ui_OGrF1WrDfqiYVJDb_5evpwCaIl=w300-rw',
+          'currentImage': 'http://nut.gy/simnut/images/icon_512x512.png',
           'currentUrl': $scope.webInfo.currentUrl,
           'title': $scope.simnut.title,
           'marketUrl': $scope.marketInfo.url,
