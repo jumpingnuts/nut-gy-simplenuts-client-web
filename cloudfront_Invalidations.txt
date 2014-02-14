@@ -1,0 +1,9 @@
+index.html
+views/comment.html
+views/footer.html
+views/list.html
+views/navbar.html
+views/regist.html
+views/signin.html
+views/view.html
+views/write.html
