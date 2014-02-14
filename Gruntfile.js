@@ -34,7 +34,7 @@ module.exports = function (grunt) {
           include:['../bower_components/requirejs/require.js', 'bootstrap.js'],
           mainConfigFile: 'app/scripts/bootstrap.js',
           out: '<%= yeoman.dist %>/scripts/app.min.js',
-          optimize:'none',
+          optimize:'uglify',
           uglify: {
             no_mangle: true
           }
