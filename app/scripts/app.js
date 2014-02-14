@@ -135,7 +135,8 @@ define([
     }]);
     
     app.controller('NativeCtrl', ['$scope', 'NativeFunc', 'UserConnectionLogin', function($scope, NativeFunc, UserConnectionLogin){
-      $scope.loginCallback = function(res){
+      if(!window.android){ return false; }
+      window.android.loginCallback = $scope.loginCallback = function(res){
         if(JSON.parse(res).response === '200') {
           $scope.userInfo.connection.push('kakao');
           $scope.userConnection.kakao = JSON.parse(window.android.getUserInfo());

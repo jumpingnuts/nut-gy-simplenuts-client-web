@@ -106,13 +106,13 @@ function (angular, $) {
             result = result.replace(new RegExp('{변수'+(parseInt(i)+1)+'}','gi'), '<b>'+randomString+'</b>');
           }
           $scope.result = result;
-          
+
           if(window.android){
             var data = {
               'title': $scope.simnut.title,
               'marketUrl': $scope.marketInfo.url,
               'type': 'image',
-              'content': $(($scope.result || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+              'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
               'contnetPostfix': $scope.result ? ' 실행 결과입니다.' : ' 앱을 좋아합니다.',
               'name': $scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name
             };
@@ -199,7 +199,7 @@ function (angular, $) {
 
       $scope.shareLink = function(type){
         var data = {
-          'content': $(($scope.result || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+          'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
           'currentImage': 'http://nut.gy/simnut/images/icon_512x512.png',
           'currentUrl': $scope.webInfo.currentUrl,
           'title': $scope.simnut.title,

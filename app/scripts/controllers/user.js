@@ -23,7 +23,7 @@ define(['angular', 'jquery', 'services/user', 'services/native'], function (angu
         
         $scope.sessLogin = function(){
           if(window.android) {
-            window.android.login('$("#nativeCallback").scope().loginCallback');
+            window.android.login('window.android.loginCallback');
           } else {
             new Auth.get({}, function(res) {
               if(res.id) {
