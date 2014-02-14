@@ -111,7 +111,7 @@ define([
       $scope.nav = {
         'active': 'trends',
         'items': {
-          'trends': {'name':'트렌드', 'order':1},
+          'trends': {'name':'트랜드', 'order':1},
           'best': {'name': '베스트', 'order':2},
           'new': {'name': '새 앱', 'order':3},
           'mine': {'name': '내가 만든 앱', 'hide':true, 'order':4}
