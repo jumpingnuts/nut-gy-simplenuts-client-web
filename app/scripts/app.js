@@ -48,7 +48,7 @@ define([
             controller : 'ListCtrl',
             templateUrl : './views/list.html'
           })
-          .when('/simnut/:simnutId', {
+          .when('/app/:simnutId', {
             //template: '<div></div>',
             controller : 'ViewCtrl',
             resolve : {
@@ -119,9 +119,9 @@ define([
       };
 
       $scope.marketInfo = {
-        'appId': 'com.jumpingnuts.simsimNuts',
-        'url' : 'https://play.google.com/store/apps/details?id=com.jumpingnuts.simsimNuts',
-        'urlCustom' : 'market://details?id=com.jumpingnuts.simsimNuts'
+        'appId': 'com.jumpingnuts.simplenuts',
+        'url' : 'https://play.google.com/store/apps/details?id='+$scope.marketInfo,
+        'urlCustom' : 'market://details?id='+$scope.marketInfo
       };
       
       $scope.move = function ( url ) {
