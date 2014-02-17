@@ -117,11 +117,12 @@ define([
           'mine': {'name': '내가 만든 앱', 'hide':true, 'order':4}
         },
       };
-
+      
+      var appid = 'com.jumpingnuts.simplenuts';
       $scope.marketInfo = {
-        'appId': 'com.jumpingnuts.simplenuts',
-        'url' : 'https://play.google.com/store/apps/details?id='+$scope.marketInfo,
-        'urlCustom' : 'market://details?id='+$scope.marketInfo
+        'appId': appid,
+        'url' : 'https://play.google.com/store/apps/details?id='+appid,
+        'urlCustom' : 'market://details?id='+appid
       };
       
       $scope.move = function ( url ) {
