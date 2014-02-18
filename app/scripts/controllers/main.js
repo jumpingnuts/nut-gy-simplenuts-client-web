@@ -89,8 +89,7 @@ function (angular, $) {
       'NativeFunc',
       function($scope, $route, $routeParams, md5, content, LikeView, LikeOn, LikeOff, ShareFunc, NativeFunc){
         if(!content.id) { $scope.move('/list/trends'); }
-      
-        $scope.inputName = '';
+        $scope.inputName = $scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name;
         $scope.result = '';
         $scope.content = content;
         $scope.like = {
@@ -114,18 +113,20 @@ function (angular, $) {
             result = result.replace(new RegExp('{변수'+(parseInt(i)+1)+'}','gi'), '<b>'+randomString+'</b>');
           }
           $scope.result = result;
-
+          
           if(window.android){
             var data = {
+              'appName': $scope.appInfo.title,
               'title': $scope.content.title,
               'marketUrl': $scope.appInfo.android.url,
               'type': 'image',
               'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.content.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
               'contnetPostfix': $scope.result ? ' 실행 결과입니다.' : ' 앱을 좋아합니다.',
-              'name': $scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name
+              'name': $scope.inputName
             };
-            
+
             var image = $scope.userConnection.kakao ? $scope.userConnection.kakao.thumbnail : null;
+
             data.storyPostText = ShareFunc.postText(data);
             NativeFunc.uploadStroryPost(data, image, '앱으로 가기', $scope.appInfo.currentPath, '');
           }
@@ -203,13 +204,11 @@ function (angular, $) {
     }])
     
     .controller('ShareCtrl', ['$scope', 'ShareFunc', function($scope, ShareFunc){
-//chk: 그린라이트 이미지 임
-
       $scope.shareLink = function(type){
         var data = {
           'appName': $scope.appInfo.title,
           'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.content.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
-          'currentImage': 'http://nut.gy/content/images/icon_512x512.png',
+          'currentImage': '',
           'currentUrl': $scope.appInfo.currentUrl,
           'title': $scope.content.title,
           'marketUrl': $scope.appInfo.android.url,

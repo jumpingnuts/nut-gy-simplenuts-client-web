@@ -93,7 +93,7 @@ define(['angular'], function (angular) {
           
           window.android.kakaoStoryUpload(
             data.storyPostText,
-            data.type === 'image' ? JSON.stringify(vars) : img, //img url
+            data.type === 'image' ? JSON.stringify(vars) : '', //img url
             title,
             '#'+href,
             callback //callback $scope 테스트 필요
