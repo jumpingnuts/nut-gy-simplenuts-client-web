@@ -9,7 +9,7 @@ require.config({
     angularCookies: '../bower_components/angular-cookies/angular-cookies',
     angularMD5: '../bower_components/angular-md5/angular-md5',
     angularBootstrap: '../bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
-    jquery: '../bower_components/jquery/jquery',
+    jquery: '../bower_components/jquery/dist/jquery.min',
     kakao: 'lib/kakao.link.min',
   },
   shim: {
@@ -44,10 +44,10 @@ require([
 ], function(angular, $) {
   'use strict';
   $(document).ready(function () {
-    //위의 디펜던시 중 simsimNuts이 포함된 app.js가 로드된 이후에 아래가 수행된다.
+    //위의 디펜던시 중 nutsApp이 포함된 app.js가 로드된 이후에 아래가 수행된다.
     //임의로 앵귤러 부트스트래핑을 수행한다.
     
-    angular.bootstrap(document, ['simsimNuts']);
+    angular.bootstrap(document, ['nutsApp']);
     
   });
 });

@@ -26,7 +26,7 @@ define([
 
     //모듈 선언
     var app = angular.module(
-      'simsimNuts', [
+      'nutsApp', [
         'mainCtrls',
         'userCtrls',
         'mainServices',
@@ -48,13 +48,13 @@ define([
             controller : 'ListCtrl',
             templateUrl : './views/list.html'
           })
-          .when('/app/:simnutId', {
+          .when('/app/:contentId', {
             //template: '<div></div>',
             controller : 'ViewCtrl',
             resolve : {
-              simnut :
-                function(SimnutLoader) {
-                  return new SimnutLoader();
+              content :
+                function(ContentLoader) {
+                  return new ContentLoader();
                 }
             },
             templateUrl : './views/view.html'
@@ -81,59 +81,75 @@ define([
 //    app.config();
     
     //공통 컨트롤러 설정 - 모든 컨트롤러에서 공통적으로 사용하는 부분들 선언
-    app.controller('CommonController', ['$rootScope', '$scope', '$location', function($rootScope, $scope, $location) {
-      $scope.webInfo = {
-        'title': '심심풀이 너츠',
-        'mailto': 'mailto:nuts@jumpingnuts.com',
-        'company': 'Jumping Nuts Inc.',
-        'establishmentYear': '2013',
-      };
-      
-      $rootScope.apiInfo = {
-        'baseUrl': 'http://api.jumpingnuts.com',  //상용
-//        'baseUrl': 'http://dev.jumpingnuts.com:9010', //개발
-        'clientId': '0441c0011f37fec037843fcfe314366f',
-        'responseType': 'token',
-        'openType': 'iframe'//iframe, opener
-      };
-      
-      $scope.$on('$routeChangeStart', function(){
-        $scope.webInfo.currentUrl=$location.absUrl();
-        $scope.webInfo.currentPath=$location.path();
-        $scope.alerts = [];
-        $scope.nav.navCollapsed = true;
-      });
-      
-      $scope.closeAlert = function(index) {
-        $scope.alerts.splice(index, 1);
-      };
-      
-      $scope.nav = {
-        'active': 'trends',
-        'items': {
-          'trends': {'name':'트랜드', 'order':1},
-          'best': {'name': '베스트', 'order':2},
-          'new': {'name': '새 앱', 'order':3},
-          'mine': {'name': '내가 만든 앱', 'hide':true, 'order':4}
-        },
-      };
-      
-      var appid = 'com.jumpingnuts.simplenuts';
-      $scope.marketInfo = {
-        'appId': appid,
-        'url' : 'https://play.google.com/store/apps/details?id='+appid,
-        'urlCustom' : 'market://details?id='+appid
-      };
-      
-      $scope.move = function ( url ) {
-        $location.url( url );
-      };
-      
-      $scope.eventStop = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-      };
-    }]);
+    app.controller('CommonController', ['$rootScope', '$scope', '$location', 
+      function($rootScope, $scope, $location) {
+        $scope.contents = {
+          type: 'trends',
+          data: [],
+          page: 1,
+          scrollPos: 0
+        };
+        var appname = 'simplenuts';
+        $scope.appInfo = $rootScope.appInfo = {
+          'title': '심심풀이 너츠',
+          'webUrl': 'http://nut.gy/'+appname,
+          'mailto': 'mailto:nuts@jumpingnuts.com',
+          'company': 'Jumping Nuts Inc.',
+          'establishmentYear': '2013',
+          'api' : {
+            'baseUrl': 'http://api.jumpingnuts.com',  //상용
+    //        'baseUrl': 'http://dev.jumpingnuts.com:9010', //개발
+            'clientId': '0441c0011f37fec037843fcfe314366f',
+            'responseType': 'token',
+            'openType': 'iframe'//iframe, opener
+          },
+          'android': {
+            'appname': appname,
+            'appId': 'com.jumpingnuts.'+appname,
+            'url' : 'https://play.google.com/store/apps/details?id='+'com.jumpingnuts.'+appname,
+            'urlCustom' : 'market://details?id='+'com.jumpingnuts.'+appname
+          }
+        };
+        
+        $scope.$on('$routeChangeStart', function(){
+          $scope.appInfo.currentUrl=$location.absUrl();
+          $scope.appInfo.currentPath=$location.path();
+          $scope.alerts = [];
+          $scope.nav.navCollapsed = true;
+        });
+        
+        $scope.closeAlert = function(index) {
+          $scope.alerts.splice(index, 1);
+        };
+        
+        $scope.nav = {
+          'active': 'trends',
+          'items': {
+            'trends': {'name':'트랜드', 'order':1},
+            'best': {'name': '베스트', 'order':2},
+            'new': {'name': '새 글', 'order':3},
+            'mine': {'name': '내가 만든 앱', 'hide':true, 'order':4}
+          },
+        };
+        
+        $scope.loadScroll = function() {
+          $(window).scrollTop($scope.contents.scrollPos);
+        };
+        $scope.saveScrollMove = function(url, $event) {
+          $scope.contents.scrollPos = $(window).scrollTop();
+          $scope.move(url, $event);
+        };
+        $scope.move = function (url, $event) {
+          if($event) { $scope.eventStop($event); }
+          $location.url( url );
+        };
+        
+        $scope.eventStop = function($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+        };
+      }
+    ]);
     
     app.controller('NativeCtrl', ['$scope', 'NativeFunc', 'UserConnectionLogin', function($scope, NativeFunc, UserConnectionLogin){
       if(!window.android){ return false; }
@@ -141,7 +157,7 @@ define([
         if(JSON.parse(res).response === '200') {
           $scope.userInfo.connection.push('kakao');
           $scope.userConnection.kakao = JSON.parse(window.android.getUserInfo());
-          NativeFunc.notiRegist($scope.userConnection.kakao.username, $scope.marketInfo.url);
+          NativeFunc.notiRegist($scope.userConnection.kakao.username, $scope.appInfo.android.url);
 
           if($scope.userConnection.kakao.properties.uid && $scope.userConnection.kakao.properties.key) {
             new UserConnectionLogin(

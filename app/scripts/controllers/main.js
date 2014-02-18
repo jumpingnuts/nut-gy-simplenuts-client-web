@@ -22,16 +22,24 @@ function (angular, $) {
     .controller('ListCtrl', [
       '$scope',
       '$routeParams',
-      '$window',
-      'MultiSimnutLoader',
-      'Simnut',
-      function($scope, $routeParams, $window, MultiSimnutLoader, Simnut) {
-        $scope.simnuts = [];
+      '$timeout',
+      'MultiContentLoader',
+      'Content',
+      function($scope, $routeParams, $timeout, MultiContentLoader, Content) {
         $scope.isLoad = false;
-        $scope.page = 1;
-        $scope.type = $scope.nav.active = $routeParams.type;
-  
-        if($scope.type==='mine' && !$scope.isLogin()) {
+        
+        if($scope.contents.type !== $routeParams.type) {
+          $scope.contents.data = [];
+          $scope.contents.page = 1;
+        } else {
+          $timeout(function(){
+            $scope.loadScroll();
+          }, 0);
+        }
+        
+        $scope.contents.type = $scope.nav.active = $routeParams.type;
+        
+        if($scope.contents.type==='mine' && !$scope.isLogin()) {
           $scope.moveLogin();
           return false;
         }
@@ -39,25 +47,25 @@ function (angular, $) {
         $scope.listLoad = function(){
           if($scope.isLoad) {return false;}
           $scope.isLoad = true;
-          new MultiSimnutLoader($scope.page, $scope.type, $scope.userInfo.id).then(function(res){
+          new MultiContentLoader($scope.contents.page, $scope.contents.type, $scope.userInfo.id).then(function(res){
             if(res.length > 0) {
-              $scope.simnuts = $scope.simnuts.concat(res);
-              $scope.page++;
+              $scope.contents.data = $scope.contents.data.concat(res);
+              $scope.contents.page++;
               $scope.isLoad = false;
             }
           });
         };
         $scope.listLoad();
         
-        $scope.deleteSimnut = function($event){
+        $scope.deleteContent = function($event){
           $scope.eventStop($event);
           if(confirm('삭제 하시겠습니까?')) {
-            var simnutId = $($event.currentTarget).attr('data-id');
-            new Simnut.remove({ id:simnutId }, function(res){
+            var contentId = $($event.currentTarget).attr('data-id');
+            new Content.remove({ id:contentId }, function(res){
               if(res.affectedRows > 0) {
-                for(var i in $scope.simnuts) {
-                  if($scope.simnuts[i].id === parseInt(simnutId)) {
-                    $scope.simnuts.pop(i);
+                for(var i in $scope.contents.data) {
+                  if($scope.contents.data[i].id === parseInt(contentId)) {
+                    $scope.contents.data.pop(i);
                     break;
                   }
                 }
@@ -73,58 +81,58 @@ function (angular, $) {
       '$route',
       '$routeParams',
       'md5',
-      'simnut',
+      'content',
       'LikeView',
       'LikeOn',
       'LikeOff',
       'ShareFunc',
       'NativeFunc',
-      function($scope, $route, $routeParams, md5, simnut, LikeView, LikeOn, LikeOff, ShareFunc, NativeFunc){
-        if(!simnut.id) { $scope.move('/list/trends'); }
+      function($scope, $route, $routeParams, md5, content, LikeView, LikeOn, LikeOff, ShareFunc, NativeFunc){
+        if(!content.id) { $scope.move('/list/trends'); }
       
         $scope.inputName = '';
         $scope.result = '';
-        $scope.simnut = simnut;
+        $scope.content = content;
         $scope.like = {
           'light' : false,
           'text' : {false: '꺼짐', true: '켜짐'},
           'id' : null
         };
         
-        var variables = angular.fromJson($scope.simnut.variables);
+        var variables = angular.fromJson($scope.content.variables);
         for(var i in variables) {
           variables[i] = variables[i].split(',');
         }
-        $scope.simnut.variables = variables;
+        $scope.content.variables = variables;
         
         $scope.getResult = function(){
           var md5Num = (md5.createHash($scope.inputName)).toString(10);
-          var result = $scope.simnut.content.replace(new RegExp('{이름}','gi'), '<b>'+$scope.inputName+'</b>');
+          var result = $scope.content.content.replace(new RegExp('{이름}','gi'), '<b>'+$scope.inputName+'</b>');
           
-          for(var i in $scope.simnut.variables) {
-            var randomString = $scope.simnut.variables[i][parseInt(md5Num.substr(i*2, 2) ,16) % variables[i].length];
+          for(var i in $scope.content.variables) {
+            var randomString = $scope.content.variables[i][parseInt(md5Num.substr(i*2, 2) ,16) % variables[i].length];
             result = result.replace(new RegExp('{변수'+(parseInt(i)+1)+'}','gi'), '<b>'+randomString+'</b>');
           }
           $scope.result = result;
 
           if(window.android){
             var data = {
-              'title': $scope.simnut.title,
-              'marketUrl': $scope.marketInfo.url,
+              'title': $scope.content.title,
+              'marketUrl': $scope.appInfo.android.url,
               'type': 'image',
-              'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+              'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.content.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
               'contnetPostfix': $scope.result ? ' 실행 결과입니다.' : ' 앱을 좋아합니다.',
               'name': $scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name
             };
             
             var image = $scope.userConnection.kakao ? $scope.userConnection.kakao.thumbnail : null;
             data.storyPostText = ShareFunc.postText(data);
-            NativeFunc.uploadStroryPost(data, image, '앱으로 가기', $scope.webInfo.currentPath, '');
+            NativeFunc.uploadStroryPost(data, image, '앱으로 가기', $scope.appInfo.currentPath, '');
           }
         };
   
         if($scope.isLogin()) {
-          new LikeView($scope.simnut.id, $scope.userInfo.id).then(function(res){
+          new LikeView($scope.content.id, $scope.userInfo.id).then(function(res){
             if(res.id) {
               $scope.like.light = true;
               $scope.like.id = res.id;
@@ -141,23 +149,23 @@ function (angular, $) {
           }
   
           if($scope.like.id) {
-            new LikeOff($scope.simnut.id, $scope.userInfo.id, $scope.like.id).then(function(res){
+            new LikeOff($scope.content.id, $scope.userInfo.id, $scope.like.id).then(function(res){
               if(res) {
                 $scope.like.light = false;
                 $scope.like.id = null;
               }
             });
           } else {
-            new LikeOn($scope.simnut.id, $scope.userInfo.id).then(function(res){
+            new LikeOn($scope.content.id, $scope.userInfo.id).then(function(res){
               if(res) {
                 $scope.like.light = true;
                 $scope.like.id = res.insertId;
                 if(window.android){
                   var data = {
                     'type': 'text',
-                    'storyPostText': ($scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name)+'님이 ['+$scope.simnut.title+'] 앱을 좋아 합니다.\n\n안드로이드 다운로드\n'+$scope.marketInfo.url
+                    'storyPostText': ($scope.userConnection.kakao ? $scope.userConnection.kakao.username : $scope.userInfo.name)+'님이 ['+$scope.content.title+'] 앱을 좋아 합니다.\n\n안드로이드 다운로드\n'+$scope.appInfo.android.url
                   };
-                  NativeFunc.uploadStroryPost(data, null, '앱으로 가기', $scope.webInfo.currentPath, '');
+                  NativeFunc.uploadStroryPost(data, null, '앱으로 가기', $scope.appInfo.currentPath, '');
                 }
               }
             });
@@ -165,7 +173,7 @@ function (angular, $) {
         };
       }
     ])
-    .controller('WriteCtrl', ['$scope', 'SimnutSave', function($scope, SimnutSave){
+    .controller('WriteCtrl', ['$scope', 'ContentSave', function($scope, ContentSave){
       $scope.write = {
         'user_id': $scope.userInfo.id,
         'title': '',
@@ -179,10 +187,10 @@ function (angular, $) {
         $scope.write.variables.push({'value':''});
       };
       
-      $scope.simnutSave = function(){
-        new SimnutSave($scope.write).then(function(res){
+      $scope.contentSave = function(){
+        new ContentSave($scope.write).then(function(res){
           if(res.insertId) {
-            $scope.move('/simnut/'+res.insertId);
+            $scope.move('/content/'+res.insertId);
           } else {
             var tmp = [];
             for(var i in $scope.write.variables) {
@@ -199,12 +207,13 @@ function (angular, $) {
 
       $scope.shareLink = function(type){
         var data = {
-          'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.simnut.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
-          'currentImage': 'http://nut.gy/simnut/images/icon_512x512.png',
-          'currentUrl': $scope.webInfo.currentUrl,
-          'title': $scope.simnut.title,
-          'marketUrl': $scope.marketInfo.url,
-          'appId': $scope.marketInfo.appId
+          'appName': $scope.appInfo.title,
+          'content': $(('<b>'+$scope.result+'</b>' || '<b>'+$scope.content.description+'</b>').replace(/<br[\s]?[\/]?\>/gi, '\n').trim()).text(),
+          'currentImage': 'http://nut.gy/content/images/icon_512x512.png',
+          'currentUrl': $scope.appInfo.currentUrl,
+          'title': $scope.content.title,
+          'marketUrl': $scope.appInfo.android.url,
+          'appId': $scope.appInfo.android.appId
         };
         ShareFunc[type](data);
       };
