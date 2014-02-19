@@ -154,6 +154,7 @@ function (angular, $) {
               if(res) {
                 $scope.like.light = false;
                 $scope.like.id = null;
+                $scope.content.count_likes--;
               }
             });
           } else {
@@ -161,6 +162,7 @@ function (angular, $) {
               if(res) {
                 $scope.like.light = true;
                 $scope.like.id = res.insertId;
+                $scope.content.count_likes++;
                 if(window.android){
                   var data = {
                     'type': 'text',
@@ -191,7 +193,9 @@ function (angular, $) {
       $scope.contentSave = function(){
         new ContentSave($scope.write).then(function(res){
           if(res.insertId) {
-            $scope.move('/content/'+res.insertId);
+            $scope.contents.data = [];
+            $scope.contents.page = 1;
+            $scope.move('/app/'+res.insertId);
           } else {
             var tmp = [];
             for(var i in $scope.write.variables) {
